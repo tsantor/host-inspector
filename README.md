@@ -47,7 +47,7 @@ print(get_health_info())
 # You can also call individual methods:
 from host_info import get_cpu_info
 from host_info import get_datetime_info
-from host_infoimport get_disk_info
+from host_info import get_disk_info
 from host_info import get_gpu_info
 from host_info import get_mem_info
 from host_info import get_network_info

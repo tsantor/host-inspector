@@ -2,7 +2,7 @@ import shlex
 import subprocess
 from functools import cache
 
-from road_trip_server.utils.byteutils import bytes_to_gib
+from host_info.utils.byteutils import bytes_to_gib
 
 from .utils import clean_name
 
