@@ -1,4 +1,4 @@
-from host_info import get_cpu_info
+from host_inspector import get_cpu_info
 
 
 def test_get_cpu_info():

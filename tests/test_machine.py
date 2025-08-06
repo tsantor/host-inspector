@@ -1,4 +1,4 @@
-from host_info.machine import get_machine_id
+from host_inspector.machine import get_machine_id
 
 
 def test_get_machine_id():

@@ -1,4 +1,4 @@
-from host_info import get_health_info
+from host_inspector import get_health_info
 
 
 def test_get_health_info():

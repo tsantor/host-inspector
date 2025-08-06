@@ -1,5 +1,5 @@
-from host_info.os import get_os_info
-from host_info.os.mac import _get_mac_os_edition
+from host_inspector.os import get_os_info
+from host_inspector.os.mac import _get_mac_os_edition
 
 
 def test_get_os_info():

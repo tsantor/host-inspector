@@ -1,4 +1,4 @@
-from host_info import get_device_info
+from host_inspector import get_device_info
 
 
 def test_get_device_info():

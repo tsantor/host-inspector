@@ -3,12 +3,12 @@ from datetime import UTC
 
 import pytest
 
-from host_info.utils import datetimeutils
-from host_info.utils.byteutils import bytes_to_gb
-from host_info.utils.byteutils import bytes_to_gib
-from host_info.utils.byteutils import bytes_to_mb
-from host_info.utils.byteutils import bytes_to_mib
-from host_info.utils.byteutils import human_readable_bytes
+from host_inspector.utils import datetimeutils
+from host_inspector.utils.byteutils import bytes_to_gb
+from host_inspector.utils.byteutils import bytes_to_gib
+from host_inspector.utils.byteutils import bytes_to_mb
+from host_inspector.utils.byteutils import bytes_to_mib
+from host_inspector.utils.byteutils import human_readable_bytes
 
 
 def test_bytes_to_mb():

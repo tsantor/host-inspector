@@ -1,4 +1,4 @@
-from host_info import get_gpu_info
+from host_inspector import get_gpu_info
 
 
 def test_get_gpu_info():

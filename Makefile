@@ -22,7 +22,7 @@ help:
 # -----------------------------------------------------------------------------
 
 PYTHON_VERSION=3.13.1
-package_name=host_info
+package_name=host_inspector
 package_version=0.1.0
 aws_profile=xstudios
 s3_bucket=xstudios-pypi
@@ -49,6 +49,9 @@ env_recreate: env_remove env pip_install_editable  ## Recreate environment from 
 pip_install_editable:  ## Install in editable mode
 	uv sync --all-groups
 	uv pip install --no-deps -e .
+
+pip_install_build_tools:  ## Install build tools
+	uv pip install --upgrade twine pkginfo setuptools wheel build
 
 pip_list:  ## Run pip list
 	uv pip list
@@ -92,10 +95,10 @@ open_coverage:  ## Open coverage report
 # -----------------------------------------------------------------------------
 
 ruff_format: ## Run ruff format
-	ruff format src/host_info
+	ruff format src/host_inspector
 
 ruff_check: ## Run ruff check
-	ruff check src/host_info
+	ruff check src/host_inspector
 
 ruff_clean: ## Run ruff clean
 	ruff clean
@@ -140,7 +143,7 @@ tree:  ## Show directory tree
 # -----------------------------------------------------------------------------
 
 dist: clean ## Builds source and wheel package
-	python3 -m build
+	uv run python3 -m build
 
 twine_upload_test: dist ## Upload package to pypi test
 	twine upload dist/* -r pypitest

@@ -114,7 +114,7 @@ wheels = [
 ]
 
 [[package]]
-name = "host-info"
+name = "host-inspector"
 source = { editable = "." }
 dependencies = [
     { name = "humanize" },

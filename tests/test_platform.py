@@ -1,4 +1,4 @@
-from host_info.platform import get_platform_info
+from host_inspector.platform import get_platform_info
 
 
 def test_get_model():
