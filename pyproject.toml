@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "host-info"
-description = "A simple python package to gather host information from Windows, Mac and Linux."
+description = "A simple python package to gather host information from Windows, Mac and Linux. Returns host data as dicts to be used internally or sent to front-end dashboard applications as JSON."
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Environment :: Console",

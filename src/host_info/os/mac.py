@@ -61,6 +61,7 @@ def _get_mac_os_edition(version) -> str:
         "12": "Monterey",
         "13": "Ventura",
         "14": "Sonoma",
+        "15": "Sequoia",
     }
 
     if version in editions:
@@ -70,7 +71,7 @@ def _get_mac_os_edition(version) -> str:
     if major in editions:
         return editions.get(major)
 
-    return "Unknown"
+    return "--"
 
 
 @cache
