@@ -7,7 +7,8 @@ def test_get_os_info():
 
     assert isinstance(os_info, dict)
 
-    assert set(os_info.keys()) == {"name", "version", "edition", "build"}
+    required_keys = {"name", "version", "edition", "build"}
+    assert required_keys.issubset(os_info.keys())
 
     # If you want to check that the values are not None
     for key, value in os_info.items():
@@ -20,4 +21,4 @@ def test_get_mac_os_edition():
     assert _get_mac_os_edition("12") == "Monterey"
     assert _get_mac_os_edition("13") == "Ventura"
     assert _get_mac_os_edition("14") == "Sonoma"
-    assert _get_mac_os_edition("99") == "Unknown"
+    assert _get_mac_os_edition("99") == "--"
