@@ -2,7 +2,8 @@ import contextlib
 import logging
 import re
 import subprocess
-from functools import cache
+
+# from functools import cache
 
 logger = logging.getLogger(__name__)
 
@@ -184,7 +185,7 @@ def parse_single_rule_block(block):
 #         print(f"Error executing command: {e}")
 
 
-@cache
+# @cache
 def get_firewall_info(
     interested_ports=None, direction=None, enabled_only=False, exclude_any_ports=False
 ) -> dict:
@@ -192,7 +193,10 @@ def get_firewall_info(
     return {
         "status": "TODO",
         "rules": get_firewall_rules(
-            interested_ports, direction="in", enabled_only=True, exclude_any_ports=True
+            interested_ports,
+            direction=direction,
+            enabled_only=enabled_only,
+            exclude_any_ports=exclude_any_ports,
         ),
     }
 
