@@ -15,14 +15,16 @@ from .datetimeutils import human_delta
 logger = logging.getLogger(__name__)
 
 
+def set_process_title(title: str) -> None:
+    """Set the process title."""
+    if sys.platform == "darwin":
+        setproctitle.setproctitle(title)
+
+
 @cache
 def get_process() -> psutil.Process:
     """Return the current process."""
-    proc = psutil.Process()
-    # Set the process title on macOS so it doesn't just show as "Python"
-    if sys.platform == "darwin":
-        setproctitle.setproctitle("Xapp Monitor")
-    return proc
+    return psutil.Process()
 
 
 def get_mem_usage(process: psutil.Process) -> str:
