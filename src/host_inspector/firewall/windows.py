@@ -6,6 +6,53 @@ import subprocess
 logger = logging.getLogger(__name__)
 
 
+def check_firewall_status():
+    """
+    Prints firewall status (overall ON/OFF).
+    Returns True if firewall is enabled in at least one profile.
+    """
+    status = is_firewall_enabled()
+    return status["overall"]
+
+
+def is_firewall_enabled():
+    """
+    Returns a dict with firewall status for domain, private, public, and overall.
+    Uses `netsh advfirewall show allprofiles`.
+
+    Example:
+        {'domain': True, 'private': True, 'public': False, 'overall': True}
+    """
+
+    command = ["netsh", "advfirewall", "show", "allprofiles"]
+    try:
+        result = subprocess.run(  # noqa: S603
+            command,
+            capture_output=True,
+            text=True,
+            check=True,
+            encoding="utf-8",
+        )
+        output = result.stdout
+    except subprocess.CalledProcessError:
+        return {"domain": None, "private": None, "public": None, "overall": None}
+
+    profiles = {"domain": False, "private": False, "public": False}
+
+    # Regex to capture each profile's "State"
+    for profile in profiles:
+        match = re.search(
+            rf"{profile}\s*profile settings:.*?state\s*on",
+            output,
+            re.IGNORECASE | re.DOTALL,
+        )
+        profiles[profile] = bool(match)
+
+    # Overall is ON if any profile is ON
+    profiles["overall"] = any(profiles.values())
+    return profiles
+
+
 def get_firewall_rules(
     ports=None, direction=None, enabled_only=False, exclude_any_ports=False
 ):
