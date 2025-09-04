@@ -11,7 +11,7 @@ from .uptime import get_uptime_info
 
 # from .python import get_python_info
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 def get_device_info() -> dict:
