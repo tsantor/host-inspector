@@ -3,8 +3,6 @@ import logging
 import re
 import subprocess
 
-# from functools import cache
-
 logger = logging.getLogger(__name__)
 
 
@@ -154,38 +152,6 @@ def parse_single_rule_block(block):
     }
 
 
-# Enhanced debugging function to see what ports are actually being parsed
-# def debug_port_parsing():
-#     """Debug function to see how ports are being parsed"""
-#     command = ["netsh", "advfirewall", "firewall", "show", "rule", "name=all"]
-
-#     try:
-#         result = subprocess.run(
-#             command,
-#             capture_output=True,
-#             text=True,
-#             encoding="utf-8",
-#             check=True,
-#             timeout=30,
-#         )
-
-#         rule_blocks = re.split(r"\n(?=Rule Name:)", result.stdout)
-#         for block in rule_blocks:
-#             if "Rule Name:" not in block:
-#                 continue
-
-#             # Look for MQTT-related rules
-#             if any(keyword in block for keyword in ["1883", "9001", "MQTT", "mqtt"]):
-#                 print("=" * 50)
-#                 print("Found MQTT-related rule:")
-#                 print(block)
-#                 print("=" * 50)
-
-#     except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
-#         print(f"Error executing command: {e}")
-
-
-# @cache
 def get_firewall_info(
     interested_ports=None, direction=None, enabled_only=False, exclude_any_ports=False
 ) -> dict:
@@ -199,35 +165,3 @@ def get_firewall_info(
             exclude_any_ports=exclude_any_ports,
         ),
     }
-
-
-# Example usage with performance improvements:
-# if __name__ == "__main__":
-#     print("Testing improved firewall rules script...")
-
-#     # First, debug to see what MQTT rules exist
-#     print("\n--- Debug: Looking for MQTT rules ---")
-#     debug_port_parsing()
-
-#     # Test with specific ports (faster)
-#     print("\n--- Rules for specific ports (optimized) ---")
-#     interested_ports = [80, 1883, 9001, 5432, 8081]
-
-#     # Get only inbound rules for specific ports, excluding "Any" ports
-#     inbound_rules = get_firewall_rules(
-#         interested_ports, direction="in", enabled_only=True, exclude_any_ports=True
-#     )
-#     print(f"Found {len(inbound_rules)} enabled inbound rules with specific ports")
-
-#     # Show rules that match our ports
-#     mqtt_rules = [
-#         rule
-#         for rule in inbound_rules
-#         if any(str(port) in str(rule.get("port", "")) for port in [1883, 9001])
-#     ]
-
-#     print(f"Found {len(mqtt_rules)} MQTT-related rules (ports 1883, 9001):")
-#     for rule in mqtt_rules:
-#         print(f"  - {rule['name']}: Port {rule['port']}")
-
-#     print(json.dumps(inbound_rules, indent=2))
