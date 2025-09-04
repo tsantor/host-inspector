@@ -5,8 +5,9 @@ import pytest
 from host_inspector import get_firewall_info
 
 
+@pytest.mark.skipif(os.name != "nt", reason="Windows only")
 @pytest.mark.parametrize(
-    "ports, direction, enabled_only, exclude_any_ports",
+    ("ports", "direction", "enabled_only", "exclude_any_ports"),
     [
         ([80], "in", True, False),
         ([22, 443], "out", False, True),
@@ -26,6 +27,7 @@ def test_get_firewall_info_variants(ports, direction, enabled_only, exclude_any_
     assert isinstance(firewall_info["rules"], list)
 
 
+@pytest.mark.skipif(os.name != "nt", reason="Windows only")
 def test_get_firewall_info_empty_ports():
     firewall_info = get_firewall_info(interested_ports=[])
     assert isinstance(firewall_info, dict)
@@ -35,7 +37,7 @@ def test_get_firewall_info_empty_ports():
 
 @pytest.mark.skipif(os.name != "nt", reason="Windows only")
 def test_check_firewall_status_true_false():
-    from host_inspector.firewall.windows import check_firewall_status
+    from host_inspector.firewall.windows import check_firewall_status  # noqa: PLC0415
 
     result = check_firewall_status()
     assert isinstance(result, bool)
@@ -43,7 +45,7 @@ def test_check_firewall_status_true_false():
 
 @pytest.mark.skipif(os.name != "nt", reason="Windows only")
 def test_is_firewall_enabled_profiles_keys():
-    from host_inspector.firewall.windows import is_firewall_enabled
+    from host_inspector.firewall.windows import is_firewall_enabled  # noqa: PLC0415
 
     status = is_firewall_enabled()
     assert isinstance(status, dict)
@@ -54,7 +56,7 @@ def test_is_firewall_enabled_profiles_keys():
 
 @pytest.mark.skipif(os.name != "nt", reason="Windows only")
 def test_is_firewall_enabled_return_type():
-    from host_inspector.firewall.windows import is_firewall_enabled
+    from host_inspector.firewall.windows import is_firewall_enabled  # noqa: PLC0415
 
     status = is_firewall_enabled()
     assert isinstance(status, dict)
