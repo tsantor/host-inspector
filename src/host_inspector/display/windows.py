@@ -2,10 +2,10 @@ def get_display_info() -> list[dict]:
     # TODO: Implement Windows display detection
     return [
         {
-            "name": "Display",
+            "name": "--",
             "display_id": 1,
-            "resolution_actual": "1920 x 1080",
-            "resolution": "1920 x 1080",
-            "refresh_rate": "60 Hz",
+            "resolution_actual": "--",
+            "resolution": "--",
+            "refresh_rate": "--",
         }
     ]
