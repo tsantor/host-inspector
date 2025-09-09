@@ -31,54 +31,76 @@ def _get_key_value(line):
     return (key, value)
 
 
-def _get_key(find_key):
-    """Get Key from GPU output."""
-    if result := get_gpu():
-        lines = result.split("\n")
-        # lines.reverse()
-        for line in lines:
+def _parse_controllers(gpu_output):
+    """Parse GPU output into separate controller dictionaries."""
+    if not gpu_output:
+        return []
+
+    controllers = []
+    current_controller = {}
+
+    for line in gpu_output.split("\n"):
+        line = line.strip()
+        if not line:
+            if current_controller:
+                controllers.append(current_controller)
+                current_controller = {}
+        elif ":" in line:
             key, value = _get_key_value(line)
-            if key == find_key:
-                return value
-    return None
+            current_controller[key] = value
+
+    if current_controller:
+        controllers.append(current_controller)
+
+    return controllers
 
 
-@cache
-def get_model() -> str:
-    """Get GPU chipset model."""
-    if name := _get_key("Description"):
-        return clean_name(name)
+def _get_model(controller):
+    """Get GPU model from controller dict."""
+    if description := controller.get("Description"):
+        return clean_name(description)
     return "--"
 
 
-@cache
-def get_vram() -> str:
-    """Get GPU VRAM."""
-    if _bytes := _get_key("AdapterRAM"):
-        return f"{bytes_to_gib(int(_bytes))} GB"
+def _get_vram(controller):
+    """Get VRAM from controller dict."""
+    if adapter_ram := controller.get("AdapterRAM"):
+        try:
+            return f"{bytes_to_gib(int(adapter_ram))} GB"
+        except (ValueError, TypeError):
+            pass
     return "--"
 
 
-@cache
-def get_resolution() -> str:
-    """Get resolution."""
-    hres = _get_key("CurrentHorizontalResolution")
-    vres = _get_key("CurrentVerticalResolution")
-    return f"{hres} x {vres}"
-
-
-@cache
-def get_refresh_rate() -> str:
-    # TODO: Get Refresh Rate.
+def _get_resolution(controller):
+    """Get resolution from controller dict."""
+    hres = controller.get("CurrentHorizontalResolution")
+    vres = controller.get("CurrentVerticalResolution")
+    if hres and vres:
+        return f"{hres} x {vres}"
     return "--"
 
 
-@cache
-def get_gpu_info() -> dict:
-    """Return a dict of GPU info."""
+def _get_refresh_rate(controller):
+    """Get refresh rate from controller dict."""
+    if refresh_rate := controller.get("CurrentRefreshRate"):
+        return f"{refresh_rate} Hz"
+    return "--"
+
+
+def _build_adapter_info(controller):
+    """Build adapter info dict from controller dict."""
     return {
-        "model": get_model(),
-        "vram": get_vram(),
-        "resolution": get_resolution(),
-        "refresh_rate": get_refresh_rate(),
+        "model": _get_model(controller),
+        "vram": _get_vram(controller),
+        "resolution": _get_resolution(controller),
+        "refresh_rate": _get_refresh_rate(controller),
     }
+
+
+@cache
+def get_gpu_info() -> list[dict]:
+    """Return a list of GPU info dictionaries, one for each display adapter."""
+    gpu_output = get_gpu()
+    controllers = _parse_controllers(gpu_output)
+    return [_build_adapter_info(controller) for controller in controllers]

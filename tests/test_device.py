@@ -10,5 +10,5 @@ def test_get_device_info():
     assert isinstance(device_info["os"], dict)
     assert isinstance(device_info["platform"], dict)
     assert isinstance(device_info["network"], dict)
-    assert isinstance(device_info["gpu"], dict)
+    assert isinstance(device_info["gpu"], dict | list)
     assert isinstance(device_info["display"], list)
