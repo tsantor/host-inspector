@@ -1,3 +1,4 @@
+import json
 import shlex
 import subprocess
 from functools import cache
@@ -11,7 +12,7 @@ from .utils import clean_name
 def get_gpu():
     """Safely get GPU."""
     try:
-        cmd = "powershell Get-WmiObject win32_VideoController"
+        cmd = "powershell Get-CimInstance -ClassName Win32_VideoController | Select-Object Name, CurrentRefreshRate, Current*Resolution, AdapterRAM | ConvertTo-Json -Compress"
         proc = subprocess.run(  # noqa: S603
             shlex.split(cmd),
             check=True,
@@ -23,42 +24,23 @@ def get_gpu():
         return None
 
 
-def _get_key_value(line):
-    """Split text output and return a key, value pair."""
-    parts = line.split(":")
-    key = parts.pop(0).strip()
-    value = ":".join(parts).strip()
-    return (key, value)
-
-
 def _parse_controllers(gpu_output):
-    """Parse GPU output into separate controller dictionaries."""
+    """Parse JSON GPU output into list of controller dictionaries."""
     if not gpu_output:
         return []
 
-    controllers = []
-    current_controller = {}
-
-    for line in gpu_output.split("\n"):
-        line = line.strip()
-        if not line:
-            if current_controller:
-                controllers.append(current_controller)
-                current_controller = {}
-        elif ":" in line:
-            key, value = _get_key_value(line)
-            current_controller[key] = value
-
-    if current_controller:
-        controllers.append(current_controller)
-
-    return controllers
+    try:
+        data = json.loads(gpu_output)
+        # Handle single controller vs multiple controllers
+        return data if isinstance(data, list) else [data]
+    except json.JSONDecodeError:
+        return []
 
 
 def _get_model(controller):
     """Get GPU model from controller dict."""
-    if description := controller.get("Description"):
-        return clean_name(description)
+    if name := controller.get("Name"):
+        return clean_name(name)
     return "--"
 
 
