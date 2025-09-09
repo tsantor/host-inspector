@@ -57,9 +57,9 @@ def _parse_display_output(sp_json) -> list[dict[str, Any]]:
                 {
                     "name": name,
                     "display_id": display_id,
-                    "resolution_actual": {"width": act_w, "height": act_h},
-                    "pixel_resolution": {"width": px_w, "height": px_h},
-                    "refresh_hz": hz,
+                    "resolution_actual": f"{act_w} x {act_h}",
+                    "resolution": f"{px_w} x {px_h}",
+                    "refresh_rate": f"{hz} Hz" if hz else "--",
                 }
             )
     return out
