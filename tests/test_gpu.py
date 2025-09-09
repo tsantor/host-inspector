@@ -7,6 +7,7 @@ def test_get_gpu_info():
 
     expected_keys = {"model", "vram", "resolution", "refresh_rate"}
 
+    assert isinstance(gpu_info, dict | list)
     if isinstance(gpu_info, dict):
         assert set(gpu_info.keys()) == expected_keys
     elif isinstance(gpu_info, list):
