@@ -204,7 +204,7 @@ def get_firewall_info(
 ) -> dict:
     """Return a dict of firewall info."""
     return {
-        "status": "TODO",
+        "status": "ON" if check_firewall_status() else "OFF",
         "rules": get_firewall_rules(
             interested_ports,
             direction=direction,
