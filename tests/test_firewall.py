@@ -1,11 +1,14 @@
 import os
+import sys
 
 import pytest
 
 from host_inspector import get_firewall_info
+from host_inspector.firewall import check_firewall_status
+from host_inspector.firewall import is_firewall_enabled
 
 
-@pytest.mark.skipif(os.name != "nt", reason="Windows only")
+@pytest.mark.skipif(sys.platform == "darwin", reason="Not implemented on macOS")
 @pytest.mark.parametrize(
     ("ports", "direction", "enabled_only", "exclude_any_ports"),
     [
@@ -27,7 +30,7 @@ def test_get_firewall_info_variants(ports, direction, enabled_only, exclude_any_
     assert isinstance(firewall_info["rules"], list)
 
 
-@pytest.mark.skipif(os.name != "nt", reason="Windows only")
+@pytest.mark.skipif(sys.platform == "darwin", reason="Not implemented on macOS")
 def test_get_firewall_info_empty_ports():
     firewall_info = get_firewall_info(interested_ports=[])
     assert isinstance(firewall_info, dict)
@@ -35,22 +38,18 @@ def test_get_firewall_info_empty_ports():
     assert "rules" in firewall_info
 
 
-@pytest.mark.skipif(os.name != "nt", reason="Windows only")
+@pytest.mark.skipif(sys.platform == "darwin", reason="Not implemented on macOS")
 def test_check_firewall_status_true_false():
-    from host_inspector.firewall.windows import check_firewall_status  # noqa: PLC0415
-
     result = check_firewall_status()
     assert isinstance(result, bool)
 
 
-@pytest.mark.skipif(os.name != "nt", reason="Windows only")
+@pytest.mark.skipif(sys.platform == "darwin", reason="Not implemented on macOS")
 def test_is_firewall_enabled_profiles_keys():
-    from host_inspector.firewall.windows import is_firewall_enabled  # noqa: PLC0415
+    enabled = is_firewall_enabled()
+    assert isinstance(enabled, bool)
 
-    status = is_firewall_enabled()
-    assert isinstance(status, dict)
-
-    assert set(status.keys()) == {"domain", "private", "public", "overall"}
+    # assert set(status.keys()) == {"domain", "private", "public", "overall"}
     # print(status)
 
 
