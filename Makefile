@@ -23,7 +23,7 @@ help:
 
 PYTHON_VERSION=3.13.1
 package_name=host_inspector
-package_version=0.1.1
+package_version=0.2.0
 aws_profile=xstudios
 s3_bucket=xstudios-pypi
 wheel_name=${package_name}-${package_version}-py3-none-any.whl
