@@ -4,9 +4,33 @@ import subprocess
 logger = logging.getLogger(__name__)
 
 
-def check_firewall_status():
+def port_to_name(port: str) -> str:
+    """Return a friendly name for a port or comma-separated ports.
+    If multiple ports map to the same name, only include the label once.
     """
-    Checks the status of common firewall services and returns if any are active.
+    port_map = {
+        "80": "HTTP",
+        "443": "HTTPS",
+        "22": "SSH",
+        "1883": "MQTT",
+        "9001": "MQTT",
+        "5432": "PostgreSQL",
+    }
+    ports = [p.strip() for p in port.split(",")] if port else []
+    # Use a set to avoid duplicate names, but preserve order
+    seen = set()
+    names = []
+    for p in ports:
+        label = port_map.get(p, p)
+        if label not in seen:
+            names.append(label)
+            seen.add(label)
+    return ",".join(names) if names else None
+
+
+def is_firewall_enabled() -> bool:
+    """
+    Checks the status of the firewall using common Linux commands.
     """
     # Prefer ufw and firewalld as they're the high-level managers.
     firewall_managers = ["ufw", "firewalld"]
@@ -16,44 +40,11 @@ def check_firewall_status():
             # Use `systemctl is-active` for a definitive, machine-readable status
             command = ["sudo", "systemctl", "is-active", manager]
             result = subprocess.run(command, capture_output=True, text=True, check=True)  # noqa: S603
-            # The command returns 0 for active, non-zero for inactive
             if result.returncode == 0:
                 return True
         except (subprocess.CalledProcessError, FileNotFoundError):
-            # If the command is not found or returns an error, that firewall manager isn't active
             continue
     return False
-
-
-def is_firewall_enabled() -> bool:
-    """
-    Checks the status of the firewall using common Linux commands.
-    """
-    # commands = {
-    #     "ufw": ["ufw", "status"],
-    #     "firewalld": ["firewall-cmd", "--state"],
-    #     "iptables": ["iptables", "-L", "-n"],
-    # }
-
-    # # Check for each firewall manager in a preferred order
-    # for args in commands.values():
-    #     try:
-    #         process = subprocess.run(args, capture_output=True, text=True, check=True)
-    #         output = process.stdout.strip().lower()
-
-    #         if "active" in output or "running" in output:
-    #             return True
-    #         if "inactive" in output:
-    #             return False
-    #         return False
-
-    #     except subprocess.CalledProcessError:
-    #         pass
-    #     except FileNotFoundError:
-    #         pass
-
-    # return False
-    return check_firewall_status()
 
 
 def get_firewall_rules(
@@ -74,7 +65,7 @@ def get_firewall_rules(
             result.stdout, ports, enabled_only, exclude_any_ports
         )
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
-        logger.exception("Error executing command")
+        logger.warning("Error executing command %s", command)
         return []
 
 
@@ -100,6 +91,8 @@ def parse_firewall_output(
         line = line.strip()  # noqa: PLW2901
         if not line or line.startswith("--"):  # Skip empty lines and separator lines
             continue
+        if "(v6)" in line:  # Skip IPv6 rules for simplicity
+            continue
 
         # Split the line into parts, but be careful with whitespace
         parts = line.split()
@@ -109,11 +102,10 @@ def parse_firewall_output(
         # The format is: To | Action | From
         # Example: "22/tcp                     ALLOW IN    Anywhere"
         #          "1883,9001/tcp              ALLOW IN    Anywhere"
-        to_part = parts[
-            0
-        ]  # This contains port/protocol like "22/tcp" or "1883,9001/tcp"
+        to_part = parts[0]
         action_part = parts[1]  # This is "ALLOW" or "DENY"
         direction_part = parts[2] if len(parts) > 2 else "IN"  # noqa: PLR2004
+        from_part = parts[3] if len(parts) > 3 else "ANY"  # noqa: PLR2004
 
         # Parse the "To" field which contains port/protocol
         protocol = "ANY"
@@ -134,15 +126,17 @@ def parse_firewall_output(
             "INBOUND" if "IN" in direction_part or "OUT" not in line else "OUTBOUND"
         )
 
+        from_port = "ANY" if from_part == "Anywhere" else from_part
+
         # Create single rule
         rule = {
-            "name": None,
+            "name": port_to_name(port) if port else None,
             "direction": direction,
             "action": action,
             "protocol": protocol,
             "enabled": True,
             "local_port": port,
-            "remote_port": "ANY",
+            "remote_port": from_port,
         }
         rules.append(rule)
 
