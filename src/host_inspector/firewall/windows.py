@@ -1,3 +1,4 @@
+import contextlib
 import logging
 import re
 import subprocess
@@ -172,12 +173,27 @@ def parse_single_rule_block(block):
     if not all([rule["name"], rule["direction"], rule["action"], rule["protocol"]]):
         return None
 
+    # Parse port information - check both local and remote ports
+    port = "Any"
+    port_candidates = [rule["local_port"], rule["remote_port"]]
+
+    for port_candidate in port_candidates:
+        if port_candidate and port_candidate.lower() != "any":
+            port = port_candidate
+            break
+
+    # Try to parse as integer if it's a simple number
+    if isinstance(port, str) and port.isdigit():
+        with contextlib.suppress(ValueError):
+            port = int(port)
+
     return {
         "name": rule["name"],
         "direction": rule["direction"].upper(),
         "action": rule["action"].upper(),
         "protocol": rule["protocol"].upper(),
         "enabled": rule["enabled"],
+        "port": port,
         "local_port": rule["local_port"],
         "remote_port": rule["remote_port"],
     }
