@@ -3,6 +3,7 @@ import sys
 import pytest
 
 from host_inspector import get_firewall_info
+from host_inspector.firewall import is_firewall_enabled
 
 
 @pytest.mark.skipif(sys.platform == "darwin", reason="Not implemented on macOS")
@@ -33,6 +34,16 @@ def test_get_firewall_info_empty_ports():
     assert isinstance(firewall_info, dict)
     assert "status" in firewall_info
     assert "rules" in firewall_info
+
+
+def test_ensure_rules_not_empty():
+    if not is_firewall_enabled():
+        pytest.skip("Firewall is not enabled; skipping test.")
+    firewall_info = get_firewall_info()
+    assert isinstance(firewall_info, dict)
+    assert "rules" in firewall_info
+    assert isinstance(firewall_info["rules"], list)
+    assert len(firewall_info["rules"]) > 0, "Firewall rules should not be empty"
 
 
 # @pytest.mark.skipif(sys.platform == "darwin", reason="Not implemented on macOS")

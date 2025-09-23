@@ -16,3 +16,7 @@ All notable changes to this project will be documented in this file. This projec
 - CHANGED: `get_gpu_info` now returns a list of dicts (one for each GPU)
 - ADDED: `get_display_info` returns a list of dicts (one for each display)
 - CHANGED: For backawards compatability, when calling `get_device_info`, the `gpu` key will be an object if only one GPU detected.
+
+## 0.2.1 (2025-09-23)
+
+- ADDED: Support for getting Linux Firewall status and rules using `ufw`.

@@ -31,19 +31,39 @@ def port_to_name(port: str) -> str:
 def is_firewall_enabled() -> bool:
     """
     Checks the status of the firewall using common Linux commands.
+    Returns a tuple: (status_string, command_used)
     """
-    # Prefer ufw and firewalld as they're the high-level managers.
-    firewall_managers = ["ufw", "firewalld"]
+    commands = {
+        "ufw": "sudo ufw status",
+        "firewalld": "sudo firewall-cmd --state",
+        "iptables": "sudo iptables -L -n",
+    }
 
-    for manager in firewall_managers:
+    # Check for each firewall manager in a preferred order
+    for command in commands.values():
         try:
-            # Use `systemctl is-active` for a definitive, machine-readable status
-            command = ["sudo", "systemctl", "is-active", manager]
-            result = subprocess.run(command, capture_output=True, text=True, check=True)  # noqa: S603
-            if result.returncode == 0:
+            # We use `shell=True` for simplicity, but for security,
+            # it's better to pass a list of arguments for user-provided input.
+            process = subprocess.run(  # noqa: S602
+                command, shell=True, capture_output=True, text=True, check=True
+            )
+            output = process.stdout.strip().lower()
+
+            if "active" in output or "running" in output:
                 return True
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            continue
+            if "inactive" in output:
+                return False
+            return False
+
+        except subprocess.CalledProcessError:
+            # The command failed, likely because the manager is not installed
+            # or not running. We can ignore this and try the next one.
+            pass
+        except FileNotFoundError:
+            # The command itself was not found.
+            pass
+
+    # If none of the commands worked
     return False
 
 
@@ -161,7 +181,3 @@ def get_firewall_info(
             exclude_any_ports=exclude_any_ports,
         ),
     }
-
-
-# sudo ufw allow 22/tcp
-# sudo ufw allow 1883,9001/tcp
