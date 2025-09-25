@@ -13,7 +13,7 @@ def get_firewall_rules(
 
 
 def get_firewall_info(
-    interested_ports=None,
+    ports=None,
     direction=None,
     enabled_only=False,
     exclude_any_ports=False,
@@ -23,7 +23,7 @@ def get_firewall_info(
         "enabled": is_firewall_enabled(),
         "status": "ON" if is_firewall_enabled() else "OFF",
         "rules": get_firewall_rules(
-            ports=interested_ports,
+            ports=ports,
             direction=direction,
             enabled_only=enabled_only,
             exclude_any_ports=exclude_any_ports,

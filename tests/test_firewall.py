@@ -17,7 +17,7 @@ from host_inspector.firewall import is_firewall_enabled
 )
 def test_get_firewall_info(ports, direction, enabled_only, exclude_any_ports):
     firewall_info = get_firewall_info(
-        interested_ports=ports,
+        ports=ports,
         direction=direction,
         enabled_only=enabled_only,
         exclude_any_ports=exclude_any_ports,
@@ -30,7 +30,7 @@ def test_get_firewall_info(ports, direction, enabled_only, exclude_any_ports):
 
 @pytest.mark.skipif(sys.platform == "darwin", reason="Not implemented on macOS")
 def test_get_firewall_info_empty_ports():
-    firewall_info = get_firewall_info(interested_ports=[])
+    firewall_info = get_firewall_info(ports=[])
     assert isinstance(firewall_info, dict)
     assert "status" in firewall_info
     assert "rules" in firewall_info

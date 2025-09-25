@@ -2,7 +2,7 @@ from .cpu import get_cpu_info
 from .date_time import get_datetime_info
 from .disk import get_disk_info
 from .display import get_display_info
-from .firewall import get_firewall_info
+from .firewall import get_firewall_info  # noqa: F401
 from .gpu import get_gpu_info
 from .memory import get_mem_info
 from .network import get_network_info
@@ -20,7 +20,7 @@ def get_device_info() -> dict:
         "platform": get_platform_info(),
         "network": get_network_info(),
         "gpu": get_gpu_info(),
-        "firewall": get_firewall_info(),
+        # "firewall": get_firewall_info(),
         "display": get_display_info(),
     }
 

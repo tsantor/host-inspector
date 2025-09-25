@@ -200,14 +200,14 @@ def parse_single_rule_block(block):
 
 
 def get_firewall_info(
-    interested_ports=None, direction=None, enabled_only=False, exclude_any_ports=False
+    ports=None, direction=None, enabled_only=False, exclude_any_ports=False
 ) -> dict:
     """Return a dict of firewall info."""
     return {
         "enabled": check_firewall_status(),
         "status": "ON" if check_firewall_status() else "OFF",
         "rules": get_firewall_rules(
-            interested_ports,
+            ports=ports,
             direction=direction,
             enabled_only=enabled_only,
             exclude_any_ports=exclude_any_ports,

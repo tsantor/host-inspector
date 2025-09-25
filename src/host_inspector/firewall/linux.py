@@ -167,7 +167,7 @@ def parse_firewall_output(
 
 
 def get_firewall_info(
-    interested_ports=None,
+    ports=None,
     direction=None,
     enabled_only=False,
     exclude_any_ports=False,
@@ -178,7 +178,7 @@ def get_firewall_info(
         "enabled": enabled,
         "status": "ON" if enabled else "OFF",
         "rules": get_firewall_rules(
-            ports=interested_ports,
+            ports=ports,
             direction=direction,
             enabled_only=enabled_only,
             exclude_any_ports=exclude_any_ports,
