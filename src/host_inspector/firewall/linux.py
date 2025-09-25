@@ -13,8 +13,11 @@ def port_to_name(port: str) -> str:
         "443": "HTTPS",
         "22": "SSH",
         "1883": "MQTT",
+        "3000": "Node",
         "9001": "MQTT",
         "5432": "PostgreSQL",
+        "8000": "HTTP",
+        "8080": "HTTP",
     }
     ports = [p.strip() for p in port.split(",")] if port else []
     # Use a set to avoid duplicate names, but preserve order

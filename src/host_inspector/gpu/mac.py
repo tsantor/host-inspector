@@ -61,7 +61,7 @@ def get_refresh_rate() -> str:
         match = pattern.search(output)
         if match:
             return f"{match.group(1)} Hz"
-    return "--"
+    return "--"  # pragma: no cover
 
 
 @cache

@@ -2,7 +2,7 @@ from .cpu import get_cpu_info
 from .date_time import get_datetime_info
 from .disk import get_disk_info
 from .display import get_display_info
-from .firewall import get_firewall_info  # noqa: F401
+from .firewall import get_firewall_info
 from .gpu import get_gpu_info
 from .memory import get_mem_info
 from .network import get_network_info
@@ -10,9 +10,7 @@ from .os import get_os_info
 from .platform import get_platform_info
 from .uptime import get_uptime_info
 
-# from .python import get_python_info
-
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 
 
 def get_device_info() -> dict:
@@ -21,9 +19,8 @@ def get_device_info() -> dict:
         "os": get_os_info(),
         "platform": get_platform_info(),
         "network": get_network_info(),
-        # "python": get_python_info(),  # deprecated 0.3.12
         "gpu": get_gpu_info(),
-        # "firewall": get_firewall_info(),
+        "firewall": get_firewall_info(),
         "display": get_display_info(),
     }
 

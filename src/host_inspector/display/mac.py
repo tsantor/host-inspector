@@ -24,7 +24,7 @@ def _parse_res(
 def _to_int_maybe(s: Any) -> int | None:
     try:
         return int(str(s).strip())
-    except ValueError:
+    except ValueError:  # pragma: no cover
         return None
 
 
@@ -72,4 +72,4 @@ def get_display_info() -> list[dict[str, Any]]:
         all_info = proc.stdout.strip()
         return _parse_display_output(json.loads(all_info))
     except (subprocess.CalledProcessError, Exception):
-        return []
+        return []  # pragma: no cover

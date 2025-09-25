@@ -1,42 +1,56 @@
 import time
 from datetime import datetime
 
+from host_inspector.utils.datetimeutils import human_date
+from host_inspector.utils.datetimeutils import human_date_short
+from host_inspector.utils.datetimeutils import human_time
+
+
+def get_now() -> datetime:
+    """Return current local datetime."""
+    return datetime.now().astimezone()
+
 
 def is_dst() -> bool:
     """Return True if Daylight Savings Time."""
     return time.localtime().tm_isdst == 1
 
 
-def local_timezone() -> str:
+def local_timezone(now: datetime) -> str:
     """Get local Timezone."""
-    return str(datetime.now().astimezone().tzinfo)
+    return str(now.tzinfo)
 
 
-def date_as_string() -> str:
+def date_as_string(now: datetime) -> str:
     """Return boot time date as string."""
-    now = datetime.now().astimezone()
     return now.strftime("%Y-%m-%d")
 
 
-def date_as_day(abbreviated=False) -> str:
+def date_as_day(now) -> str:
     """Return date as a string."""
-    now = datetime.now().astimezone()
-    return now.strftime("%a %b %d") if abbreviated else now.strftime("%A, %B %d")
+    return human_date(now)
 
 
-def time_as_string(military=False) -> str:
+def date_as_day_short(now) -> str:
+    """Return date as a string."""
+    return human_date_short(now)
+
+
+def time_as_string(now, *, military=False) -> str:
     """Return time as a string."""
-    now = datetime.now().astimezone()
-    return now.strftime("%H:%M") if military else now.strftime("%I:%M %p")
+    return human_time(now) if not military else now.strftime("%H:%M")
 
 
 def get_datetime_info() -> dict:
     """Get date/time information as a dict."""
+    now = get_now()
     return {
-        "day": date_as_day(),
-        "date": date_as_string(),
-        "time": time_as_string(),
-        "military_time": time_as_string(military=True),
-        "timezone": local_timezone(),
+        "timestamp": now.isoformat(),
+        "day": date_as_day(now),
+        "day_short": date_as_day_short(now),
+        "date": date_as_string(now),
+        "time": time_as_string(now),
+        "military_time": time_as_string(now, military=True),
+        "timezone": local_timezone(now),
         "is_dst": is_dst(),
     }
