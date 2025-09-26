@@ -199,7 +199,7 @@ uv_add_test_dependencies:  ## Add test dependencies
 	uv add pytest pytest-cov pytest-mock coverage --group test
 
 uv_add_basic:  ## Install basic dependencies
-	uv add click pydantic rich toml sentry-sdk psutil setuptools
+	uv add click pydantic rich toml sentry-sdk psutil setuptools build
 
 uv_add_async:  ## Install async dependencies
 	uv add aiomqtt httpx aiofiles

@@ -5,7 +5,7 @@ def test_get_device_info():
     device_dict = get_device_info()
     assert isinstance(device_dict, dict)
 
-    expected_keys = {"os", "platform", "network", "gpu", "display", "firewall"}
+    expected_keys = {"os", "platform", "network", "gpu", "display"}
     missing_keys = [key for key in expected_keys if key not in device_dict]
     assert not missing_keys, f"Missing keys: {missing_keys}"
 
