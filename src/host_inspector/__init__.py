@@ -1,3 +1,5 @@
+import logging
+
 from .cpu import get_cpu_info
 from .date_time import get_datetime_info
 from .disk import get_disk_info
@@ -9,6 +11,10 @@ from .network import get_network_info
 from .os import get_os_info
 from .platform import get_platform_info
 from .uptime import get_uptime_info
+
+# Basic logger setup; users of this package can configure logging as needed
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
 
 __version__ = "0.2.2"
 
