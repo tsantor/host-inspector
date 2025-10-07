@@ -38,8 +38,8 @@ def is_firewall_enabled() -> bool:
     """
     commands = {
         "ufw": "sudo ufw status",
-        "firewalld": "sudo firewall-cmd --state",
-        "iptables": "sudo iptables -L -n",
+        # "firewalld": "sudo firewall-cmd --state",
+        # "iptables": "sudo iptables -L -n",
     }
 
     # Check for each firewall manager in a preferred order
@@ -52,11 +52,9 @@ def is_firewall_enabled() -> bool:
             )
             output = process.stdout.strip().lower()
 
-            if "active" in output or "running" in output:
-                return True
             if "inactive" in output:
                 return False
-            return False
+            return bool("active" in output or "running" in output)
 
         except subprocess.CalledProcessError:
             # The command failed, likely because the manager is not installed

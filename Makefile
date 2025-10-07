@@ -23,7 +23,7 @@ help:
 
 PYTHON_VERSION=3.13.1
 package_name=host_inspector
-package_version=0.2.2
+package_version=0.2.3
 aws_profile=xstudios
 s3_bucket=xstudios-pypi
 wheel_name=${package_name}-${package_version}-py3-none-any.whl
@@ -181,9 +181,13 @@ dependency_urls: requirements_dependency pyproject_dependency ## Generate depend
 # Project Specific
 # -----------------------------------------------------------------------------
 
-user=pi
-host=raspberrypi.local
-remote_dir=/home/pi/Sandbox/Python/my-pypi-packages/host-inspector
+# user=pi
+# host=raspberrypi.local
+# remote_dir=/home/pi/Sandbox/Python/my-pypi-packages/host-inspector
+
+user=xstudios
+host=art-station-table1.local
+remote_dir=/home/xstudios/host-inspector
 
 rsync_to_pi:	## Sync files to Raspberry Pi
 	rsync -avz . ${user}@${host}:${remote_dir} --delete \

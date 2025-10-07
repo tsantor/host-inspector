@@ -16,7 +16,7 @@ def get_gpu():
             text=True,
         )
         return proc.stdout.strip()
-    except subprocess.CalledProcessError:
+    except (FileNotFoundError, subprocess.CalledProcessError):
         return None
 
 
