@@ -214,6 +214,10 @@ uv_add_async:  ## Install async dependencies
 uv_add_rpi:	## Install Raspberry Pi specific dependencies
 	uv add RPi.GPIO
 
+uv_upgrade_and_sync:	## Upgrade all dependencies and sync
+	uv lock --upgrade
+	uv sync --all-groups
+
 install_uv:	## Install uv
 	curl -LsSf https://astral.sh/uv/install.sh | sh
 
