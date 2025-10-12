@@ -154,6 +154,9 @@ twine_upload: dist ## Package and upload a release
 twine_check: dist ## Twine check
 	twine check dist/*
 
+twine_fix: ## Fix twine issues
+	uv pip install -U twine pkginfo
+
 # -----------------------------------------------------------------------------
 # X Studios S3 PyPi
 # -----------------------------------------------------------------------------

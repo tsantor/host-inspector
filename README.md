@@ -55,3 +55,18 @@ from host_inspector import get_os_info
 from host_inspector import get_platform_info
 from host_inspector import get_uptime_info
 ```
+
+## Use with Caution!
+
+To control system services we need to allow passwordless use of specific executables. You should know the security implications of doing this so **use at your own risk**.
+
+### Linux (Ubuntu)
+
+Use `sudo visudo` to add the following lines:
+
+```ini
+%sudo ALL=(ALL) NOPASSWD: /usr/sbin/ufw
+%sudo ALL=(ALL) NOPASSWD: /usr/sbin/dmidecode
+```
+
+Save and exit the file (`:wq!`). Then do:

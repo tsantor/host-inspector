@@ -21,7 +21,7 @@ All notable changes to this project will be documented in this file. This projec
 
 - ADDED: Support for getting Linux Firewall status and rules using `ufw`.
 
-## 0.2.3 (2025-09-25)
+## 0.2.2 (2025-09-25)
 
 - CHANGED: Standardize date/time formatting for device `uptime` and `local_datetime`
 
