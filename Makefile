@@ -40,7 +40,7 @@ env:  ## Create virtual environment (uses `uv`)
 env_remove:  ## Remove virtual environment
 	rm -rf .venv/
 
-env_recreate: env_remove env pip_install_editable  ## Recreate environment from scratch
+env_recreate: env_remove env pip_install_editable pip_install_dev  ## Recreate environment from scratch
 
 # -----------------------------------------------------------------------------
 # Pip
