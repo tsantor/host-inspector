@@ -11,6 +11,8 @@ A simple python package to gather host information from Windows, Mac and Linux. 
 Install Host Info:
 
 ```bash
+uv add host-inspector
+# via pip
 python3 -m pip install host-inspector
 ```
 
@@ -33,7 +35,7 @@ make open_coverage
 
 ## Issues
 
-If you experience any issues, please create an [issue](https://github.com/tsantor/host-inspector/issues) on Github.
+If you experience any issues, please create an [issue](https://bitbucket.org/xstudios/host-inspector/issues).
 
 ## Example Usage
 
@@ -58,9 +60,9 @@ from host_inspector import get_uptime_info
 
 ## Use with Caution!
 
-To control system services we need to allow passwordless use of specific executables. You should know the security implications of doing this so **use at your own risk**.
+To access system services we need to allow passwordless use of specific executables. You should know the security implications of doing this so **use at your own risk**.
 
-### Linux (Ubuntu)
+### Linux
 
 Use `sudo visudo` to add the following lines:
 

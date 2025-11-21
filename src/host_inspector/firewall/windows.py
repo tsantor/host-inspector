@@ -187,6 +187,10 @@ def parse_single_rule_block(block):
         with contextlib.suppress(ValueError):
             port = int(port)
 
+    # Convert "enabled" field to a boolean
+    enabled = rule.get("enabled", "").strip().upper()
+    rule["enabled"] = enabled == "YES"
+
     return {
         "name": rule["name"],
         "direction": rule["direction"].upper(),

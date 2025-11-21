@@ -9,7 +9,7 @@ import psutil
 # import requests
 # from requests.exceptions import RequestException
 
-# Socket constansts not the same on all platforms
+# Socket constants not the same on all platforms
 AF_INET = [2]  # IPv4 (Mac, Linux, Windows)
 AF_INET6 = [30, 10, 23]  # IPv6 (Mac, Linux, Windows)
 AF_LINK = [18, 17, -1]  # MAC address (Mac, Linux, Windows)
