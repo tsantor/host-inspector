@@ -71,5 +71,5 @@ def get_display_info() -> list[dict[str, Any]]:
         proc = subprocess.run(cmd, check=True, capture_output=True, text=True)  # noqa: S603
         all_info = proc.stdout.strip()
         return _parse_display_output(json.loads(all_info))
-    except (subprocess.CalledProcessError, Exception):
-        return []  # pragma: no cover
+    except subprocess.CalledProcessError:  # pragma: no cover
+        return []
