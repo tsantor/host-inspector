@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This projec
 ## 0.2.4 (2025-11-21)
 
 - CHANGED: Firewall rule `enabled` will always be a boolean rather than YES/NO on Windows for consistency.
+- ADDED: Added tox and tox-uv for testing against multiple versions of python
 
 ## 0.2.3 (2025-10-07)
 

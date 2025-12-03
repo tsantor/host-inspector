@@ -23,10 +23,9 @@ help:
 
 PYTHON_VERSION=3.13.1
 package_name=host_inspector
-package_version=0.2.3
 aws_profile=xstudios
 s3_bucket=xstudios-pypi
-wheel_name=${package_name}-${package_version}-py3-none-any.whl
+wheel_name=$(shell ls dist/*.whl | head -n 1 | xargs -n 1 basename)
 package_url=https://${s3_bucket}.s3.amazonaws.com/${wheel_name}
 
 # START - Generic commands
