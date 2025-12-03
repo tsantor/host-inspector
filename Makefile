@@ -93,6 +93,9 @@ coverage_skip:  ## Run tests with coverage and skip covered
 open_coverage:  ## Open coverage report
 	open htmlcov/index.html
 
+tox:  ## Run tox
+	uv run tox
+
 # -----------------------------------------------------------------------------
 # Ruff
 # -----------------------------------------------------------------------------
@@ -180,7 +183,8 @@ push_to_s3:  ## Push distro to S3 bucket
 # -----------------------------------------------------------------------------
 
 user=pi
-host=raspi3b-2.local
+# host=raspi3b-2.local
+host=192.168.1.161
 remote_dir=/home/pi/Sandbox/Python/my-pypi-packages/host-inspector
 
 rsync_to_pi:	## Sync files to Raspberry Pi
