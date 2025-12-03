@@ -191,7 +191,7 @@ rsync_to_pi:	## Sync files to Raspberry Pi
 	rsync -avz . ${user}@${host}:${remote_dir} --delete \
 		--exclude=".DS_Store" --exclude='.git' --exclude='.venv' \
 		--exclude=".coverage" --exclude='htmlcov' --exclude='__pycache__' \
-		--exclude='.pytest_cache' --exclude='.ruff_cache' \
+		--exclude='.pytest_cache' --exclude='.ruff_cache' --exclude='.tox' \
 		--exclude='.vscode' --exclude='node_modules' --exclude='dist' --exclude='*.egg-info'
 
 uv_add_dev_dependencies:  ## Add dev dependencies

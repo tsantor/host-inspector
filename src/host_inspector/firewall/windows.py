@@ -92,7 +92,8 @@ def parse_firewall_output(
         if not rule:
             continue
 
-        if enabled_only and (rule.get("enabled") or "").lower() != "yes":
+        # Skip rules that are not enabled if `enabled_only` is True
+        if enabled_only and not rule.get("enabled", False):
             continue
 
         # Handle port filtering
