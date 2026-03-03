@@ -53,13 +53,16 @@ def _parse_display_output(sp_json) -> list[dict[str, Any]]:
             # Display ID
             display_id = _to_int_maybe(drv.get("_spdisplays_displayID"))
 
+            resolution_actual = f"{act_w} x {act_h}" if act_w and act_h else "--"
+            resolution = f"{px_w} x {px_h}" if px_w and px_h else "--"
+            refresh_rate = f"{hz} Hz" if hz else "--"
             out.append(
                 {
                     "name": name,
                     "display_id": display_id,
-                    "resolution_actual": f"{act_w} x {act_h}",
-                    "resolution": f"{px_w} x {px_h}",
-                    "refresh_rate": f"{hz} Hz" if hz else "--",
+                    "resolution_actual": resolution_actual,
+                    "resolution": resolution,
+                    "refresh_rate": refresh_rate,
                 }
             )
     return out
