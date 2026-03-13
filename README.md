@@ -1,56 +1,48 @@
-# Host Info
+# Host Inspector
 
-![Coverage](https://img.shields.io/badge/coverage-40.73%25-red)
-
-## Overview
-
-A simple python package to gather host information from Windows, Mac and Linux. Returns host data as dicts to be used internally or sent to front-end dashboard applications as JSON.
+A Python package to collect host/system information on macOS, Linux, and Windows.
 
 ## Installation
 
-Install Host Info:
-
 ```bash
 uv add host-inspector
-# via pip
+# or
 python3 -m pip install host-inspector
 ```
 
-## Development
-
-To get a list of all commands with descriptions simply run `make`.
+## Development Setup
 
 ```bash
-make env
-make pip_install_editable
+just pip-install-editable
 ```
 
-## Testing
+## Testing and Checks
 
 ```bash
-make pytest
-make coverage
-make open_coverage
+just ruff-check
+just pytest
+just api-check
 ```
 
-## Issues
+List all available project commands:
 
-If you experience any issues, please create an [issue](https://bitbucket.org/xstudios/host-inspector/issues).
+```bash
+just
+```
 
-## Example Usage
+## Public API
+
+Top-level imports from `host_inspector`:
 
 ```python
-from host_inspector import get_device_info
-from host_inspector import get_health_info
-
-print(get_device_info())
-print(get_health_info())
-
-# You can also call individual methods:
 from host_inspector import get_cpu_info
 from host_inspector import get_datetime_info
+from host_inspector import get_device_info
 from host_inspector import get_disk_info
+from host_inspector import get_display_info
+from host_inspector import get_firewall_info
 from host_inspector import get_gpu_info
+from host_inspector import get_health_info
 from host_inspector import get_mem_info
 from host_inspector import get_network_info
 from host_inspector import get_os_info
@@ -58,17 +50,39 @@ from host_inspector import get_platform_info
 from host_inspector import get_uptime_info
 ```
 
-## Use with Caution!
+Additional module APIs:
 
-To access system services we need to allow passwordless use of specific executables. You should know the security implications of doing this so **use at your own risk**.
+```python
+from host_inspector.firewall import get_firewall_info
+from host_inspector.python import get_python_info
+```
 
-### Linux
+Example:
 
-Use `sudo visudo` to add the following lines:
+```python
+from host_inspector import get_device_info, get_health_info
+from host_inspector.python import get_python_info
+
+print(get_device_info())
+print(get_health_info())
+print(get_python_info())
+```
+
+## Security Notes
+
+Some firewall and hardware details may require elevated permissions depending on OS configuration.
+
+### Linux (optional sudoers setup)
+
+If your deployment requires passwordless access for specific probes, use `sudo visudo` and add only what you need, for example:
 
 ```ini
 %sudo ALL=(ALL) NOPASSWD: /usr/sbin/ufw
 %sudo ALL=(ALL) NOPASSWD: /usr/sbin/dmidecode
 ```
 
-Save and exit the file (`:wq!`). Then do:
+Apply the minimum required permissions for your environment.
+
+## Issues
+
+Report issues at: https://bitbucket.org/xstudios/host-inspector/issues
