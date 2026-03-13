@@ -5,7 +5,7 @@ from functools import cache
 
 
 @cache
-def get_gpu():
+def _get_gpu():
     """Safely get GPU."""
     try:
         cmd = "vcgencmd get_config int"
@@ -21,7 +21,7 @@ def get_gpu():
 
 
 @cache
-def get_model() -> str:
+def _get_model() -> str:
     """Get GPU chipset model."""
     model_map = {
         "bcm2835": "Broadcom VideoCore IV",
@@ -39,8 +39,8 @@ def get_model() -> str:
             text=True,
         )
         result = proc.stdout.strip()
-        for m, model in model_map.items():
-            if m in result:
+        for model_key, model in model_map.items():
+            if model_key in result:
                 return model
         return "Unknown GPU Model"
     except subprocess.CalledProcessError:
@@ -60,7 +60,7 @@ def get_model() -> str:
 
 
 @cache
-def get_vram() -> str:
+def _get_vram() -> str:
     """Safely get GPU VRAM."""
     try:
         cmd = "vcgencmd get_mem gpu"
@@ -77,12 +77,15 @@ def get_vram() -> str:
 
 
 @cache
-def get_resolution() -> str:
+def _get_resolution() -> str:
     """Safely get resolution."""
     try:
         cmd = "xrandr -display :0.0"
         proc = subprocess.run(  # noqa: S603
-            shlex.split(cmd), check=True, capture_output=True, text=True
+            shlex.split(cmd),
+            check=True,
+            capture_output=True,
+            text=True,
         )
         result = proc.stdout.strip()
         regex = r"current (\d+) x (\d+)"
@@ -91,23 +94,25 @@ def get_resolution() -> str:
     except (subprocess.CalledProcessError, FileNotFoundError):
         return "--"
 
+    return "--"
+
 
 @cache
-def get_refresh_rate() -> str:
+def _get_refresh_rate() -> str:
     """Safely get refresh rate."""
-    if result := get_gpu():
+    if result := _get_gpu():
         for line in result.splitlines():
             if line.startswith("lcd_framerate="):
                 return f"{int(line.split('=')[1])} Hz"
     return "--"
 
 
-@cache
-def get_gpu_info() -> dict:
-    """Return a dict of GPU info."""
-    return {
-        "model": get_model(),
-        "vram": get_vram(),
-        "resolution": get_resolution(),
-        "refresh_rate": get_refresh_rate(),
-    }
+class LinuxGPUCollector:
+    def gpu_info(self) -> dict:
+        """Return a dict of GPU info."""
+        return {
+            "model": _get_model(),
+            "vram": _get_vram(),
+            "resolution": _get_resolution(),
+            "refresh_rate": _get_refresh_rate(),
+        }

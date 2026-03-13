@@ -5,11 +5,11 @@ from functools import cache
 
 from host_inspector.utils.byteutils import bytes_to_gib
 
-from .utils import clean_name
+from .common import clean_gpu_name
 
 
 @cache
-def get_gpu():
+def _get_gpu():
     """Safely get GPU."""
     try:
         cmd = "powershell Get-CimInstance -ClassName Win32_VideoController | Select-Object Name, CurrentRefreshRate, Current*Resolution, AdapterRAM | ConvertTo-Json -Compress"
@@ -31,7 +31,6 @@ def _parse_controllers(gpu_output):
 
     try:
         data = json.loads(gpu_output)
-        # Handle single controller vs multiple controllers
         return data if isinstance(data, list) else [data]
     except json.JSONDecodeError:
         return []
@@ -40,7 +39,7 @@ def _parse_controllers(gpu_output):
 def _get_model(controller):
     """Get GPU model from controller dict."""
     if name := controller.get("Name"):
-        return clean_name(name)
+        return clean_gpu_name(name)
     return "--"
 
 
@@ -80,9 +79,9 @@ def _build_adapter_info(controller):
     }
 
 
-@cache
-def get_gpu_info() -> list[dict]:
-    """Return a list of GPU info dictionaries, one for each display adapter."""
-    gpu_output = get_gpu()
-    controllers = _parse_controllers(gpu_output)
-    return [_build_adapter_info(controller) for controller in controllers]
+class WindowsGPUCollector:
+    def gpu_info(self) -> list[dict]:
+        """Return info dictionaries, one for each display adapter."""
+        gpu_output = _get_gpu()
+        controllers = _parse_controllers(gpu_output)
+        return [_build_adapter_info(controller) for controller in controllers]

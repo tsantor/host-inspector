@@ -1,5 +1,12 @@
-from host_inspector.utils.importutils import get_platform_module
+from functools import cache
 
-platform_module = get_platform_module(__name__)
+from .infrastructure import build_gpu_service
 
-get_gpu_info = platform_module.get_gpu_info
+
+@cache
+def _get_gpu_service():
+    return build_gpu_service()
+
+
+def get_gpu_info() -> dict | list[dict]:
+    return _get_gpu_service().get_gpu_info()

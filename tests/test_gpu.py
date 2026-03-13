@@ -1,4 +1,13 @@
 from host_inspector import get_gpu_info
+from host_inspector.gpu.application.service import GPUService
+
+
+class StubCollector:
+    def __init__(self, payload: dict | list[dict]):
+        self.payload = payload
+
+    def gpu_info(self) -> dict | list[dict]:
+        return self.payload
 
 
 def test_get_gpu_info():
@@ -14,3 +23,27 @@ def test_get_gpu_info():
         for item in gpu_info:
             assert isinstance(item, dict)
             assert set(item.keys()) == expected_keys
+
+
+def test_gpu_service_dict_passthrough():
+    payload = {
+        "model": "Apple M4 GPU",
+        "vram": "8 GB",
+        "resolution": "3024 x 1964",
+        "refresh_rate": "120.0 Hz",
+    }
+    service = GPUService(collector=StubCollector(payload=payload))
+    assert service.get_gpu_info() == payload
+
+
+def test_gpu_service_list_passthrough():
+    payload = [
+        {
+            "model": "NVIDIA RTX",
+            "vram": "16 GB",
+            "resolution": "3840 x 2160",
+            "refresh_rate": "144 Hz",
+        }
+    ]
+    service = GPUService(collector=StubCollector(payload=payload))
+    assert service.get_gpu_info() == payload

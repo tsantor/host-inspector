@@ -3,11 +3,11 @@ import shlex
 import subprocess
 from functools import cache
 
-from .utils import clean_name
+from .common import clean_gpu_name
 
 
 @cache
-def get_gpu():
+def _get_gpu():
     """Safely get GPU."""
     try:
         cmd = "system_profiler SPDisplaysDataType"
@@ -23,19 +23,21 @@ def get_gpu():
 
 
 @cache
-def get_model() -> str:
+def _get_model() -> str:
     """Get GPU chipset model."""
-    if result := get_gpu():
+    if result := _get_gpu():
         for line in result.split("\n"):
             if "Chipset Model" in line:
-                return clean_name(re.sub(r"\s+Chipset Model:\s+", "", line, count=1))
+                return clean_gpu_name(
+                    re.sub(r"\s+Chipset Model:\s+", "", line, count=1)
+                )
     return "--"  # pragma: no cover
 
 
 @cache
-def get_vram() -> str:
+def _get_vram() -> str:
     """Get GPU VRAM."""
-    if result := get_gpu():
+    if result := _get_gpu():
         for line in result.split("\n"):
             if "VRAM" in line:
                 return line.split(":")[1].strip()
@@ -43,9 +45,9 @@ def get_vram() -> str:
 
 
 @cache
-def get_resolution() -> str:
+def _get_resolution() -> str:
     """Get resolution."""
-    if result := get_gpu():
+    if result := _get_gpu():
         regex = r"(\d+) x (\d+)"
         if match := re.search(regex, result):
             return f"{match[1]} x {match[2]}"
@@ -53,10 +55,10 @@ def get_resolution() -> str:
 
 
 @cache
-def get_refresh_rate() -> str:
+def _get_refresh_rate() -> str:
     """Get refresh rate."""
     pattern = re.compile(r"@ (\d+\.\d+)Hz")
-    output = get_gpu()
+    output = _get_gpu()
     if output:
         match = pattern.search(output)
         if match:
@@ -64,12 +66,12 @@ def get_refresh_rate() -> str:
     return "--"  # pragma: no cover
 
 
-@cache
-def get_gpu_info() -> dict:
-    """Return a dict of GPU info."""
-    return {
-        "model": get_model(),
-        "vram": get_vram(),
-        "resolution": get_resolution(),
-        "refresh_rate": get_refresh_rate(),
-    }
+class MacGPUCollector:
+    def gpu_info(self) -> dict:
+        """Return a dict of GPU info."""
+        return {
+            "model": _get_model(),
+            "vram": _get_vram(),
+            "resolution": _get_resolution(),
+            "refresh_rate": _get_refresh_rate(),
+        }
