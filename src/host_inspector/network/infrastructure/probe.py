@@ -6,6 +6,8 @@ from typing import Any
 
 import psutil
 
+from host_inspector.network.application.dtos import NetworkSnapshotDTO
+
 AF_INET6 = [30, 10, 23]
 AF_LINK = [18, 17, -1]
 
@@ -31,27 +33,19 @@ def _current_ip_address() -> str:
 
 
 class SystemNetworkProbe:
-    def hostname(self) -> str:
-        return platform.node()
-
-    def current_ip_address(self) -> str:
-        return _current_ip_address()
-
-    def node_value(self) -> int:
-        return uuid.getnode()
-
-    def interface_for_ip(self, ip_address: str) -> str:
+    def snapshot(self) -> NetworkSnapshotDTO:
+        ip_address = _current_ip_address()
         interface_name, _ = _network_interface_by_ip(ip_address)
-        return interface_name
-
-    def mac_for_ip(self, ip_address: str) -> str | None:
         _, addresses = _network_interface_by_ip(ip_address)
-        return next(
-            (addr.address for addr in addresses if addr.family in AF_LINK), None
-        )
-
-    def ipv6_for_ip(self, ip_address: str) -> str | None:
-        _, addresses = _network_interface_by_ip(ip_address)
-        return next(
-            (addr.address for addr in addresses if addr.family in AF_INET6), None
+        return NetworkSnapshotDTO(
+            hostname=platform.node(),
+            ip_address=ip_address,
+            node_value=uuid.getnode(),
+            interface=interface_name,
+            mac_address=next(
+                (addr.address for addr in addresses if addr.family in AF_LINK), None
+            ),
+            ipv6_address=next(
+                (addr.address for addr in addresses if addr.family in AF_INET6), None
+            ),
         )

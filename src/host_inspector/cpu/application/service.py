@@ -36,7 +36,7 @@ class CPUService:
 
     def get_temp_info(self) -> dict:
         """Return current temperature information."""
-        return self.platform.temperature_info()
+        return self.platform.temperature_info().data
 
     def get_cpu_info(self) -> dict:
         """Return CPU info as a dict."""

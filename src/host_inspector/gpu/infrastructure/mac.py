@@ -3,6 +3,9 @@ import shlex
 import subprocess
 from functools import cache
 
+from host_inspector.gpu.application.dtos import GPUInfoDTO
+from host_inspector.gpu.application.dtos import GPUPayloadDTO
+
 from .common import clean_gpu_name
 
 
@@ -67,11 +70,16 @@ def _get_refresh_rate() -> str:
 
 
 class MacGPUCollector:
-    def gpu_info(self) -> dict:
+    def gpu_info(self) -> GPUPayloadDTO:
         """Return a dict of GPU info."""
-        return {
-            "model": _get_model(),
-            "vram": _get_vram(),
-            "resolution": _get_resolution(),
-            "refresh_rate": _get_refresh_rate(),
-        }
+        return GPUPayloadDTO(
+            adapters=[
+                GPUInfoDTO(
+                    model=_get_model(),
+                    vram=_get_vram(),
+                    resolution=_get_resolution(),
+                    refresh_rate=_get_refresh_rate(),
+                )
+            ],
+            as_list=False,
+        )

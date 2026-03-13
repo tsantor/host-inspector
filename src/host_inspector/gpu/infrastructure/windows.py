@@ -3,6 +3,8 @@ import shlex
 import subprocess
 from functools import cache
 
+from host_inspector.gpu.application.dtos import GPUInfoDTO
+from host_inspector.gpu.application.dtos import GPUPayloadDTO
 from host_inspector.utils.byteutils import bytes_to_gib
 
 from .common import clean_gpu_name
@@ -69,19 +71,22 @@ def _get_refresh_rate(controller):
     return "--"
 
 
-def _build_adapter_info(controller):
+def _build_adapter_info(controller) -> GPUInfoDTO:
     """Build adapter info dict from controller dict."""
-    return {
-        "model": _get_model(controller),
-        "vram": _get_vram(controller),
-        "resolution": _get_resolution(controller),
-        "refresh_rate": _get_refresh_rate(controller),
-    }
+    return GPUInfoDTO(
+        model=_get_model(controller),
+        vram=_get_vram(controller),
+        resolution=_get_resolution(controller),
+        refresh_rate=_get_refresh_rate(controller),
+    )
 
 
 class WindowsGPUCollector:
-    def gpu_info(self) -> list[dict]:
+    def gpu_info(self) -> GPUPayloadDTO:
         """Return info dictionaries, one for each display adapter."""
         gpu_output = _get_gpu()
         controllers = _parse_controllers(gpu_output)
-        return [_build_adapter_info(controller) for controller in controllers]
+        return GPUPayloadDTO(
+            adapters=[_build_adapter_info(controller) for controller in controllers],
+            as_list=True,
+        )

@@ -1,4 +1,6 @@
 from host_inspector import get_gpu_info
+from host_inspector.gpu.application.dtos import GPUInfoDTO
+from host_inspector.gpu.application.dtos import GPUPayloadDTO
 from host_inspector.gpu.application.service import GPUService
 
 
@@ -6,8 +8,12 @@ class StubCollector:
     def __init__(self, payload: dict | list[dict]):
         self.payload = payload
 
-    def gpu_info(self) -> dict | list[dict]:
-        return self.payload
+    def gpu_info(self) -> GPUPayloadDTO:
+        if isinstance(self.payload, list):
+            return GPUPayloadDTO(
+                adapters=[GPUInfoDTO(**item) for item in self.payload], as_list=True
+            )
+        return GPUPayloadDTO(adapters=[GPUInfoDTO(**self.payload)], as_list=False)
 
 
 def test_get_gpu_info():

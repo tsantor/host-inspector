@@ -3,7 +3,7 @@ import shlex
 import subprocess
 from functools import cache
 
-from host_inspector.os.application.ports import OSData
+from host_inspector.os.application.dtos import OSDataDTO
 
 
 def _search_pattern(pattern: str, result: str) -> str | None:
@@ -13,7 +13,7 @@ def _search_pattern(pattern: str, result: str) -> str | None:
 
 
 @cache
-def _collect_mac_os_data() -> OSData:
+def _collect_mac_os_data() -> OSDataDTO:
     cmd = "sw_vers"
     proc = subprocess.run(  # noqa: S603
         shlex.split(cmd),
@@ -27,15 +27,15 @@ def _collect_mac_os_data() -> OSData:
     version = _search_pattern(r"ProductVersion:(.+)", result)
     build = _search_pattern(r"BuildVersion:(.+)", result)
 
-    return {
-        "platform": "darwin",
-        "name": name,
-        "version": version,
-        "edition": "--",
-        "build": build,
-    }
+    return OSDataDTO(
+        platform="darwin",
+        name=name,
+        version=version,
+        edition="--",
+        build=build,
+    )
 
 
 class MacOSCollector:
-    def collect(self) -> OSData:
+    def collect(self) -> OSDataDTO:
         return _collect_mac_os_data()

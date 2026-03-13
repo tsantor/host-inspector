@@ -3,6 +3,8 @@ import shlex
 import subprocess
 from functools import cache
 
+from host_inspector.platform.application.dtos import PlatformInfoDTO
+
 
 @cache
 def _get_manufacturer() -> str:
@@ -56,14 +58,14 @@ def _get_serial() -> str:
 
 
 class WindowsPlatformCollector:
-    def platform_info(self) -> dict:
+    def platform_info(self) -> PlatformInfoDTO:
         uname = platform.uname()
-        return {
-            "system": uname.system,
-            "release": uname.release,
-            "machine": uname.machine,
-            "architecture": platform.architecture()[0],
-            "manufacturer": _get_manufacturer(),
-            "model": _get_model(),
-            "serial": _get_serial(),
-        }
+        return PlatformInfoDTO(
+            system=uname.system,
+            release=uname.release,
+            machine=uname.machine,
+            architecture=platform.architecture()[0],
+            manufacturer=_get_manufacturer(),
+            model=_get_model(),
+            serial=_get_serial(),
+        )

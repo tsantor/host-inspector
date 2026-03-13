@@ -1,4 +1,5 @@
 from host_inspector import get_mem_info
+from host_inspector.memory.application.dtos import MemorySnapshotDTO
 from host_inspector.memory.application.service import MemoryService
 from host_inspector.memory.domain import mem_physical
 from host_inspector.memory.domain import mem_physical_str
@@ -7,12 +8,12 @@ from host_inspector.memory.domain import mem_physical_str
 class StubProbe:
     def snapshot(self):
         gib = 1024 * 1024 * 1024
-        return {
-            "total": 16 * gib,
-            "used": 8 * gib,
-            "available": 8 * gib,
-            "percent": 50.0,
-        }
+        return MemorySnapshotDTO(
+            total=16 * gib,
+            used=8 * gib,
+            available=8 * gib,
+            percent=50.0,
+        )
 
 
 def test_get_mem_info_shape():

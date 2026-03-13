@@ -1,14 +1,8 @@
 from typing import Protocol
-from typing import TypedDict
 
-
-class DiskSnapshot(TypedDict):
-    total: int
-    used: int
-    free: int
-    percent: float
+from .dtos import DiskSnapshotDTO
 
 
 class DiskProbePort(Protocol):
-    def snapshot(self, path: str = "/") -> DiskSnapshot:
+    def snapshot(self, path: str = "/") -> DiskSnapshotDTO:
         """Return a disk usage snapshot."""

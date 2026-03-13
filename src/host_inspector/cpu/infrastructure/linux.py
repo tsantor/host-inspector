@@ -4,6 +4,8 @@ from functools import cache
 
 import psutil
 
+from host_inspector.cpu.application.dtos import TemperatureInfoDTO
+
 from .common import clean_processor_name
 
 
@@ -28,7 +30,7 @@ def _get_processor_name() -> str:
         return "--"
 
 
-def _get_temp_info() -> dict:
+def _get_temp_info() -> TemperatureInfoDTO:
     """Get CPU temperature with psutil, then vcgencmd fallback."""
     try:
         temps = psutil.sensors_temperatures()
@@ -36,12 +38,14 @@ def _get_temp_info() -> dict:
             temp = temps["coretemp"][0].current
             temp_c = round(temp, 1)
             temp_f = round(temp_c * 9 / 5 + 32, 1)
-            return {
-                "celsius": temp_c,
-                "fahrenheit": temp_f,
-                "celsius_str": f"{temp_c} °C",
-                "fahrenheit_str": f"{temp_f} °F",
-            }
+            return TemperatureInfoDTO(
+                data={
+                    "celsius": temp_c,
+                    "fahrenheit": temp_f,
+                    "celsius_str": f"{temp_c} °C",
+                    "fahrenheit_str": f"{temp_f} °F",
+                }
+            )
     except (KeyError, AttributeError):
         pass
 
@@ -54,21 +58,23 @@ def _get_temp_info() -> dict:
         )
         temp_c = round(float(result.stdout.split("=")[1].split("'")[0]), 1)
         temp_f = round(temp_c * 9 / 5 + 32, 1)
-        return {
-            "celsius": temp_c,
-            "fahrenheit": temp_f,
-            "celsius_str": f"{temp_c} °C",
-            "fahrenheit_str": f"{temp_f} °F",
-        }
+        return TemperatureInfoDTO(
+            data={
+                "celsius": temp_c,
+                "fahrenheit": temp_f,
+                "celsius_str": f"{temp_c} °C",
+                "fahrenheit_str": f"{temp_f} °F",
+            }
+        )
     except (FileNotFoundError, subprocess.CalledProcessError, IndexError, ValueError):
         pass
 
-    return {}
+    return TemperatureInfoDTO(data={})
 
 
 class LinuxCPUPlatform:
     def processor_name(self) -> str:
         return _get_processor_name()
 
-    def temperature_info(self) -> dict:
+    def temperature_info(self) -> TemperatureInfoDTO:
         return _get_temp_info()

@@ -1,14 +1,8 @@
 from typing import Protocol
-from typing import TypedDict
 
-
-class MemorySnapshot(TypedDict):
-    total: int
-    used: int
-    available: int
-    percent: float
+from .dtos import MemorySnapshotDTO
 
 
 class MemoryProbePort(Protocol):
-    def snapshot(self) -> MemorySnapshot:
+    def snapshot(self) -> MemorySnapshotDTO:
         """Return a memory snapshot."""

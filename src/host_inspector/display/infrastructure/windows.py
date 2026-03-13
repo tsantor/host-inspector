@@ -1,6 +1,9 @@
 import ctypes
 import ctypes.wintypes
 
+from host_inspector.display.application.dtos import DisplayCollectionDTO
+from host_inspector.display.application.dtos import DisplayInfoDTO
+
 
 class DisplayDevice(ctypes.Structure):
     _fields_ = [
@@ -53,12 +56,12 @@ class DevMode(ctypes.Structure):
 
 
 class WindowsDisplayCollector:
-    def display_info(self) -> list[dict]:
+    def display_info(self) -> DisplayCollectionDTO:
         user32 = ctypes.windll.user32
         enum_display_devices = user32.EnumDisplayDevicesW
         enum_display_settings = user32.EnumDisplaySettingsW
 
-        output = []
+        output: list[DisplayInfoDTO] = []
         index = 0
         while True:
             display_device = DisplayDevice()
@@ -84,22 +87,22 @@ class WindowsDisplayCollector:
             pixel_height = devmode.dmPelsHeight
 
             output.append(
-                {
-                    "name": display_device.DeviceString,
-                    "display_id": index,
-                    "resolution_actual": (
+                DisplayInfoDTO(
+                    name=str(display_device.DeviceString),
+                    display_id=index,
+                    resolution_actual=(
                         f"{actual_width} x {actual_height}"
                         if actual_width and actual_height
                         else "--"
                     ),
-                    "resolution": (
+                    resolution=(
                         f"{pixel_width} x {pixel_height}"
                         if pixel_width and pixel_height
                         else "--"
                     ),
-                    "refresh_rate": f"{refresh_hz} Hz" if refresh_hz else "--",
-                }
+                    refresh_rate=f"{refresh_hz} Hz" if refresh_hz else "--",
+                )
             )
             index += 1
 
-        return output
+        return DisplayCollectionDTO(items=output)

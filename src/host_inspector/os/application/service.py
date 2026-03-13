@@ -14,16 +14,16 @@ class OSService:
         data = self.collector.collect()
 
         info = {
-            "name": data["name"],
-            "version": data["version"],
-            "edition": data["edition"],
-            "build": data["build"],
+            "name": data.name,
+            "version": data.version,
+            "edition": data.edition,
+            "build": data.build,
         }
 
-        if data["platform"] == "darwin":
-            info["edition"] = get_macos_edition(data["version"])
+        if data.platform == "darwin":
+            info["edition"] = get_macos_edition(data.version)
 
-        display_version = data.get("display_version")
+        display_version = data.display_version
         if display_version is not None:
             info["display_version"] = display_version
 

@@ -1,8 +1,11 @@
 from typing import Protocol
 
+from .dtos import FirewallRulesDTO
+from .dtos import FirewallStatusDTO
+
 
 class FirewallCollectorPort(Protocol):
-    def enabled_status(self) -> bool | dict:
+    def enabled_status(self) -> FirewallStatusDTO:
         """Return platform-specific enabled status."""
 
     def rules(
@@ -11,5 +14,5 @@ class FirewallCollectorPort(Protocol):
         direction=None,
         enabled_only: bool = False,
         exclude_any_ports: bool = False,
-    ) -> list[dict]:
+    ) -> FirewallRulesDTO:
         """Return platform-specific firewall rules."""

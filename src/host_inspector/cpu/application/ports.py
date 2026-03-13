@@ -1,5 +1,7 @@
 from typing import Protocol
 
+from .dtos import TemperatureInfoDTO
+
 
 class CPUMetricsPort(Protocol):
     def physical_count(self) -> int:
@@ -19,5 +21,5 @@ class CPUPlatformPort(Protocol):
     def processor_name(self) -> str:
         """Return normalized processor model name."""
 
-    def temperature_info(self) -> dict:
+    def temperature_info(self) -> TemperatureInfoDTO:
         """Return temperature information."""

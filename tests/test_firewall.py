@@ -4,6 +4,8 @@ import pytest
 
 from host_inspector import get_firewall_info
 from host_inspector.firewall import is_firewall_enabled
+from host_inspector.firewall.application.dtos import FirewallRulesDTO
+from host_inspector.firewall.application.dtos import FirewallStatusDTO
 from host_inspector.firewall.application.service import FirewallService
 from host_inspector.firewall.domain import extract_ports_from_rule
 from host_inspector.firewall.domain import parse_linux_firewall_output
@@ -100,13 +102,13 @@ class StubCollector:
         self._rules = rules
 
     def enabled_status(self):
-        return self._status
+        return FirewallStatusDTO(overall=bool(self._status.get("overall", False)))
 
     def rules(
         self, ports=None, direction=None, enabled_only=False, exclude_any_ports=False
     ):
         del ports, direction, enabled_only, exclude_any_ports
-        return self._rules
+        return FirewallRulesDTO(items=[])
 
 
 def test_firewall_service_normalizes_dict_status():

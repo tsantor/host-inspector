@@ -3,6 +3,9 @@ import shlex
 import subprocess
 from functools import cache
 
+from host_inspector.gpu.application.dtos import GPUInfoDTO
+from host_inspector.gpu.application.dtos import GPUPayloadDTO
+
 
 @cache
 def _get_gpu():
@@ -108,11 +111,16 @@ def _get_refresh_rate() -> str:
 
 
 class LinuxGPUCollector:
-    def gpu_info(self) -> dict:
+    def gpu_info(self) -> GPUPayloadDTO:
         """Return a dict of GPU info."""
-        return {
-            "model": _get_model(),
-            "vram": _get_vram(),
-            "resolution": _get_resolution(),
-            "refresh_rate": _get_refresh_rate(),
-        }
+        return GPUPayloadDTO(
+            adapters=[
+                GPUInfoDTO(
+                    model=_get_model(),
+                    vram=_get_vram(),
+                    resolution=_get_resolution(),
+                    refresh_rate=_get_refresh_rate(),
+                )
+            ],
+            as_list=False,
+        )

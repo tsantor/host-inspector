@@ -1,4 +1,5 @@
 from host_inspector import get_cpu_info
+from host_inspector.cpu.application.dtos import TemperatureInfoDTO
 from host_inspector.cpu.application.service import CPUService
 
 
@@ -31,7 +32,7 @@ class StubPlatform:
         return self._processor
 
     def temperature_info(self) -> dict:
-        return self._temperature
+        return TemperatureInfoDTO(data=self._temperature)
 
 
 def test_get_cpu_info():

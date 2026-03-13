@@ -1,6 +1,10 @@
+from host_inspector.firewall.application.dtos import FirewallRulesDTO
+from host_inspector.firewall.application.dtos import FirewallStatusDTO
+
+
 class MacFirewallCollector:
-    def enabled_status(self) -> bool:
-        return False
+    def enabled_status(self) -> FirewallStatusDTO:
+        return FirewallStatusDTO(overall=False)
 
     def rules(
         self,
@@ -8,6 +12,6 @@ class MacFirewallCollector:
         direction=None,
         enabled_only: bool = False,
         exclude_any_ports: bool = False,
-    ) -> list[dict]:
+    ) -> FirewallRulesDTO:
         del ports, direction, enabled_only, exclude_any_ports
-        return []
+        return FirewallRulesDTO(items=[])

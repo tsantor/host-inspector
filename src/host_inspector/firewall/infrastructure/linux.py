@@ -1,13 +1,16 @@
 import logging
 import subprocess
 
+from host_inspector.firewall.application.dtos import FirewallRuleDTO
+from host_inspector.firewall.application.dtos import FirewallRulesDTO
+from host_inspector.firewall.application.dtos import FirewallStatusDTO
 from host_inspector.firewall.domain import parse_linux_firewall_output
 
 logger = logging.getLogger(__name__)
 
 
 class LinuxFirewallCollector:
-    def enabled_status(self) -> bool:
+    def enabled_status(self) -> FirewallStatusDTO:
         commands = {
             "ufw": "sudo ufw status",
         }
@@ -22,11 +25,13 @@ class LinuxFirewallCollector:
                 )
                 output = process.stdout.strip().lower()
                 if "inactive" in output:
-                    return False
-                return bool("active" in output or "running" in output)
+                    return FirewallStatusDTO(overall=False)
+                return FirewallStatusDTO(
+                    overall=bool("active" in output or "running" in output)
+                )
             except (subprocess.CalledProcessError, FileNotFoundError):
                 pass
-        return False
+        return FirewallStatusDTO(overall=False)
 
     def rules(
         self,
@@ -34,7 +39,7 @@ class LinuxFirewallCollector:
         direction=None,
         enabled_only: bool = False,
         exclude_any_ports: bool = False,
-    ) -> list[dict]:
+    ) -> FirewallRulesDTO:
         del direction
         command = ["sudo", "ufw", "status", "verbose"]
         try:
@@ -46,12 +51,17 @@ class LinuxFirewallCollector:
                 check=True,
                 timeout=30,
             )
-            return parse_linux_firewall_output(
-                result.stdout,
-                ports_filter=ports,
-                enabled_only=enabled_only,
-                exclude_any_ports=exclude_any_ports,
+            return FirewallRulesDTO(
+                items=[
+                    FirewallRuleDTO(data=rule)
+                    for rule in parse_linux_firewall_output(
+                        result.stdout,
+                        ports_filter=ports,
+                        enabled_only=enabled_only,
+                        exclude_any_ports=exclude_any_ports,
+                    )
+                ]
             )
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
             logger.warning("Error executing command %s", command)
-            return []
+            return FirewallRulesDTO(items=[])

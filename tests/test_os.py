@@ -1,4 +1,5 @@
 from host_inspector.os import get_os_info
+from host_inspector.os.application.dtos import OSDataDTO
 from host_inspector.os.application.service import OSService
 from host_inspector.os.domain import get_macos_edition
 
@@ -7,8 +8,8 @@ class StubCollector:
     def __init__(self, payload: dict):
         self.payload = payload
 
-    def collect(self) -> dict:
-        return self.payload
+    def collect(self) -> OSDataDTO:
+        return OSDataDTO(**self.payload)
 
 
 def test_get_os_info():

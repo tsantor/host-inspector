@@ -1,4 +1,5 @@
 from host_inspector.platform import get_platform_info
+from host_inspector.platform.application.dtos import PlatformInfoDTO
 from host_inspector.platform.application.service import PlatformService
 
 
@@ -26,7 +27,7 @@ class StubCollector:
         self.payload = payload
 
     def platform_info(self) -> dict:
-        return self.payload
+        return PlatformInfoDTO(**self.payload)
 
 
 def test_platform_service_passthrough():

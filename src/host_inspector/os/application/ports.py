@@ -1,17 +1,8 @@
-from typing import NotRequired
 from typing import Protocol
-from typing import TypedDict
 
-
-class OSData(TypedDict):
-    platform: str
-    name: str
-    version: str | int | None
-    edition: str | None
-    build: str | int | None
-    display_version: NotRequired[str]
+from .dtos import OSDataDTO
 
 
 class OSCollector(Protocol):
-    def collect(self) -> OSData:
+    def collect(self) -> OSDataDTO:
         """Collect platform OS information."""

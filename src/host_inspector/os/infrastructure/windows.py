@@ -4,7 +4,7 @@ import sys
 import winreg
 from functools import cache
 
-from host_inspector.os.application.ports import OSData
+from host_inspector.os.application.dtos import OSDataDTO
 
 
 @cache
@@ -25,17 +25,17 @@ def _get_windows_display_version() -> str:
 
 
 @cache
-def _collect_windows_os_data() -> OSData:
-    return {
-        "platform": "win32",
-        "name": platform.system(),
-        "version": _get_windows_version(),
-        "edition": platform.win32_edition(),
-        "build": sys.getwindowsversion().build,
-        "display_version": _get_windows_display_version(),
-    }
+def _collect_windows_os_data() -> OSDataDTO:
+    return OSDataDTO(
+        platform="win32",
+        name=platform.system(),
+        version=_get_windows_version(),
+        edition=platform.win32_edition(),
+        build=sys.getwindowsversion().build,
+        display_version=_get_windows_display_version(),
+    )
 
 
 class WindowsOSCollector:
-    def collect(self) -> OSData:
+    def collect(self) -> OSDataDTO:
         return _collect_windows_os_data()

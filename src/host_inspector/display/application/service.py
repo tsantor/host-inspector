@@ -8,4 +8,4 @@ class DisplayService:
     collector: DisplayCollectorPort
 
     def get_display_info(self) -> list[dict]:
-        return self.collector.display_info()
+        return [item.to_dict() for item in self.collector.display_info().items]

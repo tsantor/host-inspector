@@ -8,10 +8,11 @@ class HealthService:
     probe: HealthProbePort
 
     def get_health_info(self) -> dict:
+        snapshot = self.probe.snapshot()
         return {
-            "cpu": self.probe.cpu_info(),
-            "mem": self.probe.mem_info(),
-            "disk": self.probe.disk_info(),
-            "uptime": self.probe.uptime_info(),
-            "local_datetime": self.probe.datetime_info(),
+            "cpu": snapshot.cpu,
+            "mem": snapshot.mem,
+            "disk": snapshot.disk,
+            "uptime": snapshot.uptime,
+            "local_datetime": snapshot.local_datetime,
         }

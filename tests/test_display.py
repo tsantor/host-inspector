@@ -1,4 +1,6 @@
 from host_inspector import get_display_info
+from host_inspector.display.application.dtos import DisplayCollectionDTO
+from host_inspector.display.application.dtos import DisplayInfoDTO
 from host_inspector.display.application.service import DisplayService
 from host_inspector.display.domain import parse_macos_display_output
 from host_inspector.display.domain import parse_resolution
@@ -63,8 +65,10 @@ class StubCollector:
     def __init__(self, payload: list[dict]):
         self.payload = payload
 
-    def display_info(self) -> list[dict]:
-        return self.payload
+    def display_info(self) -> DisplayCollectionDTO:
+        return DisplayCollectionDTO(
+            items=[DisplayInfoDTO(**item) for item in self.payload]
+        )
 
 
 def test_display_service_passthrough():
