@@ -1,5 +1,12 @@
-from host_inspector.utils.importutils import get_platform_module
+from functools import cache
 
-platform_module = get_platform_module(__name__)
+from .infrastructure import build_display_service
 
-get_display_info = platform_module.get_display_info
+
+@cache
+def _get_display_service():
+    return build_display_service()
+
+
+def get_display_info() -> list[dict]:
+    return _get_display_service().get_display_info()
