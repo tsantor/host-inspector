@@ -1,5 +1,9 @@
-from host_inspector.utils.importutils import get_platform_module
+from functools import cache
 
-platform_module = get_platform_module(__name__)
+from .infrastructure import build_os_service
 
-get_os_info = platform_module.get_os_info
+
+@cache
+def get_os_info() -> dict:
+    """Return OS info as dict."""
+    return build_os_service().get_os_info()

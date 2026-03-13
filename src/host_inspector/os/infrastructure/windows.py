@@ -1,16 +1,15 @@
 import contextlib
-import logging
 import platform
 import sys
 import winreg
 from functools import cache
 
-logger = logging.getLogger(__name__)
+from host_inspector.os.application.ports import OSData
 
 
 @cache
-def _get_windows_version() -> str:
-    # Need this since Windows major.minor reports as 10.x for Windows 11
+def _get_windows_version() -> str | int:
+    # Need this since Windows major.minor reports as 10.x for Windows 11.
     if int(platform.version().split(".")[2]) >= 22000:  # noqa: PLR2004
         return 11
     return platform.win32_ver()[0]
@@ -26,13 +25,17 @@ def _get_windows_display_version() -> str:
 
 
 @cache
-def get_os_info() -> dict:
-    """Return OS info as dict."""
-
+def _collect_windows_os_data() -> OSData:
     return {
+        "platform": "win32",
         "name": platform.system(),
         "version": _get_windows_version(),
         "edition": platform.win32_edition(),
         "build": sys.getwindowsversion().build,
         "display_version": _get_windows_display_version(),
     }
+
+
+class WindowsOSCollector:
+    def collect(self) -> OSData:
+        return _collect_windows_os_data()
