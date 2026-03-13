@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.2.5 (2026-03-13)
+
+- CHANGED: Completed layered (domain/application/infrastructure) refactors across host info domains.
+- CHANGED: Replaced dict-style application port payloads with dataclass DTO contracts where structured payloads cross boundaries.
+- CHANGED: Updated README workflow docs to use `just` commands for setup/check/test tasks.
+
 ## 0.2.4 (2025-11-21)
 
 - CHANGED: Firewall rule `enabled` will always be a boolean rather than YES/NO on Windows for consistency.

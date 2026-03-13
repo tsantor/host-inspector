@@ -18,7 +18,7 @@ from .uptime import get_uptime_info
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 
-__version__ = "0.2.4"
+__version__ = "0.2.5"
 
 __all__ = [
     "get_cpu_info",
