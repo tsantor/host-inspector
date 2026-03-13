@@ -62,7 +62,11 @@ def _get_mac_os_edition(version) -> str:
         "13": "Ventura",
         "14": "Sonoma",
         "15": "Sequoia",
+        "26": "Tahoe",
     }
+
+    if not isinstance(version, str):
+        return "--"
 
     if version in editions:
         return editions.get(version)
@@ -70,6 +74,14 @@ def _get_mac_os_edition(version) -> str:
     major = version.split(".")[0]
     if major in editions:
         return editions.get(major)
+
+    try:
+        major_num = int(major)
+    except ValueError:
+        return "--"
+
+    if major_num >= 11:  # noqa: PLR2004
+        return "macOS"
 
     return "--"
 
