@@ -1,5 +1,12 @@
-from host_inspector.utils.importutils import get_platform_module
+from functools import cache
 
-platform_module = get_platform_module(__name__)
+from .infrastructure import build_platform_service
 
-get_platform_info = platform_module.get_platform_info
+
+@cache
+def _get_platform_service():
+    return build_platform_service()
+
+
+def get_platform_info() -> dict:
+    return _get_platform_service().get_platform_info()
