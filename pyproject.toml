@@ -72,7 +72,6 @@ pythonpath = "src"
 
 # ==== Coverage ====
 [tool.coverage.run]
-include = ["*/host_inspector/**/*.py"]
 omit = ["*/migrations/*", "*/tests/*"]
 # plugins = []
 

@@ -1,0 +1,21 @@
+{
+  "modules": {
+    "host_inspector": [
+      "get_cpu_info",
+      "get_datetime_info",
+      "get_device_info",
+      "get_disk_info",
+      "get_display_info",
+      "get_firewall_info",
+      "get_gpu_info",
+      "get_health_info",
+      "get_mem_info",
+      "get_network_info",
+      "get_os_info",
+      "get_platform_info",
+      "get_uptime_info"
+    ],
+    "host_inspector.python": ["get_python_info"],
+    "host_inspector.firewall": ["get_firewall_info"]
+  }
+}

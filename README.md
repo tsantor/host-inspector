@@ -1,6 +1,6 @@
 # Host Info
 
-![Coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-40.73%25-red)
 
 ## Overview
 
