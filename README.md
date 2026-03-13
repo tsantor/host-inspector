@@ -1,5 +1,7 @@
 # Host Inspector
 
+![Coverage](https://img.shields.io/badge/coverage-65.69%25-yellow)
+
 A Python package to collect host/system information on macOS, Linux, and Windows.
 
 ## Installation
