@@ -4,30 +4,32 @@ from functools import cache
 
 import psutil
 
-from .utils import clean_name
+from .common import clean_processor_name
 
 
 @cache
-def get_processor_name() -> str:
+def _get_processor_name() -> str:
     """Safely get processor name."""
     try:
-        cmd = ["lscpu"]
-        proc = subprocess.run(cmd, check=True, capture_output=True, text=True)  # noqa: S603
+        proc = subprocess.run(
+            ["lscpu"],  # noqa: S607
+            check=True,
+            capture_output=True,
+            text=True,
+        )
         all_info = proc.stdout.strip()
         for line in all_info.split("\n"):
             if "Model name:" in line:
-                return clean_name(re.sub(r"Model name:\s+", "", line, count=1))
+                return clean_processor_name(
+                    re.sub(r"Model name:\s+", "", line, count=1)
+                )
         return "--"
     except subprocess.CalledProcessError:  # pragma: no cover
         return "--"
 
 
-def get_temp_info() -> dict:
-    """
-    Try to get CPU temperature using psutil first, then fallback to vcgencmd.
-    Returns an empty dict if neither works.
-    """
-    # Try psutil first
+def _get_temp_info() -> dict:
+    """Get CPU temperature with psutil, then vcgencmd fallback."""
     try:
         temps = psutil.sensors_temperatures()
         if temps.get("coretemp"):
@@ -43,7 +45,6 @@ def get_temp_info() -> dict:
     except (KeyError, AttributeError):
         pass
 
-    # Fallback to vcgencmd (Raspberry Pi)
     try:
         result = subprocess.run(
             ["/usr/bin/vcgencmd", "measure_temp"],
@@ -62,5 +63,12 @@ def get_temp_info() -> dict:
     except (FileNotFoundError, subprocess.CalledProcessError, IndexError, ValueError):
         pass
 
-    # If all methods fail
     return {}
+
+
+class LinuxCPUPlatform:
+    def processor_name(self) -> str:
+        return _get_processor_name()
+
+    def temperature_info(self) -> dict:
+        return _get_temp_info()

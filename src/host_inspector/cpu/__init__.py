@@ -1,54 +1,51 @@
 from functools import cache
 
-import psutil
-
-from host_inspector.utils.importutils import get_platform_module
-
-platform_module = get_platform_module(__name__)
-
-get_processor_name = platform_module.get_processor_name
-get_temp_info = platform_module.get_temp_info
+from .infrastructure import build_cpu_service
 
 
 def mhz_to_ghz(m) -> float:
     """Convert MHz to GHz."""
-    return round(m / 1000, 2)
+    return _get_cpu_service().mhz_to_ghz(m)
 
 
 @cache
 def cpu_physical_count() -> int:
     """Get the number of physical CPUs on the system."""
-    return psutil.cpu_count(logical=False)
+    return _get_cpu_service().cpu_physical_count()
 
 
 @cache
 def cpu_logical_count() -> int:
     """Get the number of logical CPUs on the system."""
-    return psutil.cpu_count()
+    return _get_cpu_service().cpu_logical_count()
 
 
 @cache
 def cpu_freq() -> float:
     """Get the maximum frequency of the CPU in GHz."""
-    return mhz_to_ghz(psutil.cpu_freq().max)
+    return _get_cpu_service().cpu_freq()
 
 
 def cpu_percent() -> float:
     """Get the current CPU usage percentage."""
-    return psutil.cpu_percent()
+    return _get_cpu_service().cpu_percent()
+
+
+def get_processor_name() -> str:
+    """Safely get processor name."""
+    return _get_cpu_service().get_processor_name()
+
+
+def get_temp_info() -> dict:
+    """Return current temperature information."""
+    return _get_cpu_service().get_temp_info()
+
+
+@cache
+def _get_cpu_service():
+    return build_cpu_service()
 
 
 def get_cpu_info() -> dict:
     """Return CPU info as a dict."""
-    cpu_usage = cpu_percent()
-    cpu_ghz = cpu_freq()
-    return {
-        "count": cpu_physical_count(),
-        "logical": cpu_logical_count(),
-        "percent": cpu_usage,
-        "percent_str": f"{cpu_usage}%",
-        "processor": get_processor_name(),
-        "frequency": cpu_ghz,
-        "frequency_str": f"{cpu_ghz} GHz",
-        "temperature": get_temp_info(),
-    }
+    return _get_cpu_service().get_cpu_info()
