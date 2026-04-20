@@ -1,7 +1,7 @@
 [project]
 name = "host-inspector"
 description = "A simple python package to gather host information from Windows, Mac and Linux. Returns host data as dicts to be used internally or sent to front-end dashboard applications as JSON."
-version = "0.2.5"
+version = "0.3.0"
 dynamic = ["readme"]
 requires-python = ">=3.11"
 authors = [
@@ -29,7 +29,7 @@ dev=[
   "pre-commit>=4.4.0",
   "ruff>=0.14.4",
   "twine>=6.2.0",
-  "xapp-tools>=0.3.1",
+  "xapp-tools>=0.4.0",
 ]
 test=[
   "pytest-cov>=7.0.0",
