@@ -2,6 +2,8 @@ from functools import cache
 
 from .infrastructure import build_python_service
 
+__all__ = ["get_python_info"]
+
 
 @cache
 def _get_python_service():

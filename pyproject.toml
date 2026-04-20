@@ -1,14 +1,9 @@
-# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
-
-[build-system]
-requires = ["setuptools", "wheel", "tox"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "host-inspector"
 description = "A simple python package to gather host information from Windows, Mac and Linux. Returns host data as dicts to be used internally or sent to front-end dashboard applications as JSON."
-dynamic = ["version", "readme"]
-requires-python = ">=3.10"
+version = "0.2.5"
+dynamic = ["readme"]
+requires-python = ">=3.11"
 authors = [
   { name = "Tim Santor", email = "tsantor@xstudios.com" },
 ]
@@ -17,10 +12,10 @@ classifiers = [
   "Environment :: Console",
   "Intended Audience :: Developers",
   "Natural Language :: English",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
   "humanize>=4.14.0",
@@ -30,36 +25,33 @@ dependencies = [
 
 [dependency-groups]
 dev=[
-  "build>=1.3.0",
-  "pipdeptree>=2.30.0",
+  "hatch>=1.16.5",
   "pre-commit>=4.4.0",
   "ruff>=0.14.4",
   "twine>=6.2.0",
-  "wheel>=0.45.1",
+  "xapp-tools>=0.3.1",
 ]
 test=[
-  "coverage>=7.10.7",
-  "pytest>=8.4.2",
   "pytest-cov>=7.0.0",
   "pytest-mock>=3.15.1",
-  "tox>=4.32.0",
   "tox-uv>=1.29.0",
 ]
 
 [project.urls]
 # Homepage = "https://xstudios.com"
-# Documentation = "https://readthedocs.org//host-inspector"
-Repository = "https://github.com/tsantor/host-inspector.git"
-Issues = "https://github.com/tsantor/host-inspector/issues"
-Changelog = "https://github.com/tsantor/host-inspector/blob/master/HISTORY.md"
+# Documentation = "https://readthedocs.org/host-inspector"
+Repository = "https://bitbucket.org/xstudios/host-inspector.git"
+Issues = "https://bitbucket.org/xstudios/host-inspector/issues"
+Changelog = "https://bitbucket.org/xstudios/host-inspector/src/master/HISTORY.md"
 
-[tool.setuptools.packages.find]
-# https://setuptools.pypa.io/en/latest/userguide/datafiles.html
-where = ["src"]
+[build-system]
+requires = ["hatchling", "xapp-tools"]
+build-backend = "hatchling.build"
 
-[tool.setuptools.dynamic]
-version = { attr = "host_inspector.__version__" }
-readme = { file = ["README.md", "HISTORY.md"], content-type = "text/markdown" }
+[tool.hatch.build.targets.wheel]
+packages = ["src/host_inspector"]
+
+[tool.hatch.metadata.hooks.combined-readme]
 
 # ==== pytest ====
 [tool.pytest.ini_options]
@@ -123,7 +115,7 @@ exclude = [
   "*/migrations/*.py",
   "staticfiles/*",
 ]
-# Same as Django: https://github.com/cookiecutter/cookiecutter-django/issues/4792.
+# Same as Django: https://bitbucket.org/cookiecutter/cookiecutter-django/issues/4792.
 line-length = 88
 indent-width = 4
 target-version = "py311"

@@ -2,6 +2,8 @@ from functools import cache
 
 from .infrastructure import build_firewall_service
 
+__all__ = ["get_firewall_info"]
+
 
 @cache
 def _get_firewall_service():
