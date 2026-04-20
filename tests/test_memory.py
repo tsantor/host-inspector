@@ -10,9 +10,9 @@ class StubProbe:
         gib = 1024 * 1024 * 1024
         return MemorySnapshotDTO(
             total=16 * gib,
-            used=8 * gib,
-            available=8 * gib,
-            percent=50.0,
+            used=1 * gib,
+            available=2 * gib,
+            percent=87.5,
         )
 
 
@@ -34,16 +34,20 @@ def test_get_mem_info_shape():
 def test_memory_domain_formatting():
     gib = 1024 * 1024 * 1024
     total_bytes = 16 * gib
-    expected_physical_gb = 18
+    expected_physical_gb = 16
     assert mem_physical(total_bytes) == expected_physical_gb
     assert mem_physical_str(total_bytes) == f"{expected_physical_gb} GB"
 
 
 def test_memory_service_output():
-    expected_physical_gb = 18
-    expected_percent = 50.0
+    expected_physical_gb = 16
+    expected_percent = 87.5
+    expected_used_gb = 15.0
+    expected_avail_gb = 2.1
     service = MemoryService(probe=StubProbe())
     info = service.get_mem_info()
     assert info["physical"] == expected_physical_gb
+    assert info["used"] == expected_used_gb
+    assert info["avail"] == expected_avail_gb
     assert info["percent"] == expected_percent
     assert info["percent_str"] == f"{expected_percent}%"

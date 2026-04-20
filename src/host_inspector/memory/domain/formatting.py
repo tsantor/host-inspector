@@ -1,13 +1,12 @@
-import math
-
 import humanize
 
 from host_inspector.utils.byteutils import bytes_to_gb
+from host_inspector.utils.byteutils import bytes_to_gib
 
 
 def mem_physical(total_bytes: int) -> int:
-    """Return physical memory in GB rounded up."""
-    return math.ceil(bytes_to_gb(total_bytes))
+    """Return physical memory using binary RAM units (GiB)."""
+    return int(bytes_to_gib(total_bytes, decimals=0))
 
 
 def mem_physical_str(total_bytes: int) -> str:

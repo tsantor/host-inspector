@@ -17,11 +17,12 @@ class MemoryService:
 
     def get_mem_info(self) -> dict:
         snapshot = self.probe.snapshot()
+        used_bytes = max(snapshot.total - snapshot.available, 0)
         return {
             "physical": mem_physical(snapshot.total),
             "physical_str": mem_physical_str(snapshot.total),
-            "used": mem_used(snapshot.used),
-            "used_str": mem_used_str(snapshot.used),
+            "used": mem_used(used_bytes),
+            "used_str": mem_used_str(used_bytes),
             "avail": mem_avail(snapshot.available),
             "avail_str": mem_avail_str(snapshot.available),
             "percent": mem_percent(snapshot.percent),
