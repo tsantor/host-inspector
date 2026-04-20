@@ -2,6 +2,8 @@ from functools import cache
 
 from .infrastructure import build_uptime_service
 
+all__all__ = ["get_uptime_info"]
+
 
 @cache
 def _get_uptime_service():

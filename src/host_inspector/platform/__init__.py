@@ -2,6 +2,8 @@ from functools import cache
 
 from .infrastructure import build_platform_service
 
+__all__ = ["get_platform_info"]
+
 
 @cache
 def _get_platform_service():

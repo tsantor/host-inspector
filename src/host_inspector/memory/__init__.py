@@ -2,6 +2,8 @@ from functools import cache
 
 from .infrastructure import build_memory_service
 
+__all__ = ["get_mem_info"]
+
 
 @cache
 def _get_memory_service():

@@ -11,7 +11,6 @@
     "host_inspector.memory": ["get_mem_info"],
     "host_inspector.network": ["get_network_info"],
     "host_inspector.os": ["get_os_info"],
-    "host_inspector.platform": ["get_platform_info"],
-    "host_inspector.uptime": ["get_uptime_info"]
+    "host_inspector.platform": ["get_platform_info"]
   }
 }

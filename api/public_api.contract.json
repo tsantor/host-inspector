@@ -1,21 +1,17 @@
 {
   "modules": {
-    "host_inspector": [
-      "get_cpu_info",
-      "get_datetime_info",
-      "get_device_info",
-      "get_disk_info",
-      "get_display_info",
-      "get_firewall_info",
-      "get_gpu_info",
-      "get_health_info",
-      "get_mem_info",
-      "get_network_info",
-      "get_os_info",
-      "get_platform_info",
-      "get_uptime_info"
-    ],
-    "host_inspector.python": ["get_python_info"],
-    "host_inspector.firewall": ["get_firewall_info"]
+    "host_inspector.cpu": ["get_cpu_info"],
+    "host_inspector.date_time": ["get_datetime_info"],
+    "host_inspector.device": ["get_device_info"],
+    "host_inspector.disk": ["get_disk_info"],
+    "host_inspector.display": ["get_display_info"],
+    "host_inspector.firewall": ["get_firewall_info"],
+    "host_inspector.gpu": ["get_gpu_info"],
+    "host_inspector.health": ["get_health_info"],
+    "host_inspector.memory": ["get_mem_info"],
+    "host_inspector.network": ["get_network_info"],
+    "host_inspector.os": ["get_os_info"],
+    "host_inspector.platform": ["get_platform_info"],
+    "host_inspector.uptime": ["get_uptime_info"]
   }
 }

@@ -2,6 +2,8 @@ from functools import cache
 
 from .infrastructure import build_device_service
 
+__all__ = ["get_device_info"]
+
 
 @cache
 def _get_device_service():

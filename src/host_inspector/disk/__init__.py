@@ -2,6 +2,8 @@ from functools import cache
 
 from .infrastructure import build_disk_service
 
+__all__ = ["get_disk_info"]
+
 
 @cache
 def _get_disk_service():

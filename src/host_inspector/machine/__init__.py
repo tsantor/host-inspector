@@ -2,6 +2,8 @@ from functools import cache
 
 from .infrastructure import build_machine_service
 
+__all__ = ["get_machine_id"]
+
 
 @cache
 def _get_machine_service():

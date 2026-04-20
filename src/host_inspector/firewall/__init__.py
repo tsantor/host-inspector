@@ -2,7 +2,7 @@ from functools import cache
 
 from .infrastructure import build_firewall_service
 
-__all__ = ["get_firewall_info"]
+__all__ = ["get_firewall_info", "is_firewall_enabled"]
 
 
 @cache

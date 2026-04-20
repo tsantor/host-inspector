@@ -2,6 +2,8 @@ from functools import cache
 
 from .infrastructure import build_network_service
 
+__all__ = ["get_network_info"]
+
 
 @cache
 def _get_network_service():
