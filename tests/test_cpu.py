@@ -1,6 +1,10 @@
+from types import SimpleNamespace
+
 from host_inspector import get_cpu_info
 from host_inspector.cpu.application.dtos import TemperatureInfoDTO
 from host_inspector.cpu.application.service import CPUService
+from host_inspector.cpu.infrastructure.metrics import SAMPLE_INTERVAL_SECONDS
+from host_inspector.cpu.infrastructure.metrics import PsutilCPUMetrics
 
 
 class StubMetrics:
@@ -84,3 +88,16 @@ def test_cpu_service_mhz_to_ghz():
 
     expected_ghz = 2.8
     assert service.mhz_to_ghz(2800.0) == expected_ghz
+
+
+def test_psutil_metrics_usage_percent_uses_sampled_idle(mocker):
+    expected_percent = 27.7
+    mock_times = SimpleNamespace(idle=72.34)
+    patched = mocker.patch(
+        "host_inspector.cpu.infrastructure.metrics.psutil.cpu_times_percent",
+        return_value=mock_times,
+    )
+    metrics = PsutilCPUMetrics()
+
+    assert metrics.usage_percent() == expected_percent
+    patched.assert_called_once_with(interval=SAMPLE_INTERVAL_SECONDS)
