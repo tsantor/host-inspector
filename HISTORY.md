@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This projec
 - CHANGED: Updated supported Python baseline to `>=3.11`.
 - CHANGED: Removed legacy setuptools packaging artifacts and build helper scripts.
 - CHANGED: Updated public API contract to focus on module-level exports.
+- CHANGED: Memory reporting now aligns with OS expectations by deriving `used` from `total - available` and reporting physical RAM with binary sizing.
 
 ## 0.2.5 (2026-03-13)
 
